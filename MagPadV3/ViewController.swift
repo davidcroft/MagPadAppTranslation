@@ -59,6 +59,9 @@ class ViewController: UIViewController, F53OSCClientDelegate, F53OSCPacketDestin
     
     // translation
     var translator: Polyglot!
+    var transRectStartX: CGFloat = 0.0
+    var transRectStartY: CGFloat = 0.0
+    var transRectSelectView: UIImageView!
     
     var debugCnt:UInt = 0
 
@@ -287,8 +290,8 @@ class ViewController: UIViewController, F53OSCClientDelegate, F53OSCPacketDestin
     // init scrollview
     func initScrollView() {
         // add scrollView
-        imageView = UIImageView(image: UIImage(named: "file.jpg"))
-        //imageView = UIImageView(image: scaleImage(UIImage(named: "file.jpg")!, maxDimension: 1650))
+        //imageView = UIImageView(image: UIImage(named: "file.jpg"))
+        imageView = UIImageView(image: scaleImage(UIImage(named: "file.jpg")!, maxDimension: 1650))
         scrollView = UIScrollView(frame: view.bounds)
         scrollView.backgroundColor = UIColor.blackColor()
         //scrollView.contentSize = imageView.bounds.size
@@ -301,6 +304,9 @@ class ViewController: UIViewController, F53OSCClientDelegate, F53OSCPacketDestin
         tapRecognizer.numberOfTapsRequired = 1
         tapRecognizer.numberOfTouchesRequired = 1
         scrollView.addGestureRecognizer(tapRecognizer)
+        
+        var panRecognizer = UIPanGestureRecognizer(target: self, action: "scrollViewPanned:")
+        scrollView.addGestureRecognizer(panRecognizer)
     }
     
     func setScrollViewOffset(rowVal:Double, colVal:Double) {
@@ -325,6 +331,11 @@ class ViewController: UIViewController, F53OSCClientDelegate, F53OSCPacketDestin
         // mapping row and col
         println("mapping pdf Index: \(colInch), \(rowInch)")*/
         
+        if (self.transRectSelectView != nil && self.transRectSelectView.isDescendantOfView(self.view)) {
+            //println("yes")
+            self.transRectSelectView.removeFromSuperview()
+        }
+        
         if (self.translateTxt.alpha == 1) {
             fadeOutLabel(self.translateTxt)
         } else {
@@ -332,9 +343,63 @@ class ViewController: UIViewController, F53OSCClientDelegate, F53OSCPacketDestin
         }
     }
     
+    ////////////////////////////
+    // word selection
+    func scrollViewPanned(recognizer: UIPanGestureRecognizer) {
+        let x = recognizer.locationInView(imageView).x
+        let y = recognizer.locationInView(imageView).y
+        
+        let width = abs(x-transRectStartX)
+        let height = abs(y-transRectStartY)
+        
+        let startX = min(x, transRectStartX)
+        let startY = min(y, transRectStartY)
+        if (recognizer.state == UIGestureRecognizerState.Began) {
+            println("STATE BEGIN: (\(x), \(y))")
+            transRectStartX = x;
+            transRectStartY = y;
+        } else if (recognizer.state == UIGestureRecognizerState.Changed) {
+            let transRectEndX = x;
+            let transRectEndY = y;
+            drawPanSelectionRect(startX, startY: startY, width: width, height: height)
+        } else if (recognizer.state == UIGestureRecognizerState.Ended) {
+            println("STATE END: (\(x), \(y))")
+            let transRectEndX = x;
+            let transRectEndY = y;
+            drawPanSelectionRect(transRectStartX, startY: transRectStartY, width: width, height: height)
+            
+            /////////////////////////////////////
+            /////////////////////////////////////
+            /////////////////////////////////////
+            // OCR + translation
+            if (width > 50 && height > 20) {
+                self.translateTxt.textAlignment = .Center
+                self.translateTxt.text = "Text Recognition ..."
+                let img = cropImageRect(imageView.image!, topLeftX: startX, topLeftY: startY, width: width, height: height)
+                self.performOCR(img)
+                fadeInLabel(self.translateTxt)
+            }
+        }
+    }
+    
+    
+    // draw rectangle for pan selection area
+    func drawPanSelectionRect(startX: CGFloat, startY: CGFloat, width: CGFloat, height: CGFloat) {
+        if (self.transRectSelectView != nil && self.transRectSelectView.isDescendantOfView(self.view)) {
+            //println("yes")
+            self.transRectSelectView.removeFromSuperview()
+        }
+        // draw a rectangle
+        let imageSize = CGSize(width: width, height: height)
+        transRectSelectView = UIImageView(frame: CGRect(origin: CGPoint(x: startX, y: startY), size: imageSize))
+        transRectSelectView.image = drawCustomImage(imageSize, color: yellowColor)
+        //transRectSelectView.alpha = 0.8
+        self.view.addSubview(transRectSelectView)
+    }
     
     ////////////////////////////////////
     // Image crop
+    // topLeftX and topLeftY are both inch in size
     func cropImageFromPoint(image: UIImage, topLeftX: CGFloat, topLeftY: CGFloat) -> UIImage {
         
         var height = CGFloat(image.size.height)
@@ -354,6 +419,16 @@ class ViewController: UIViewController, F53OSCClientDelegate, F53OSCPacketDestin
         // Create new cropped UIImage
         let croppedImage:UIImage! = UIImage(CGImage: imageRef)
 
+        return croppedImage
+    }
+    
+    // topLeftX and topLeftY are both pixel in imageview
+    func cropImageRect(image: UIImage, topLeftX: CGFloat, topLeftY: CGFloat, width: CGFloat, height: CGFloat) -> UIImage {
+        let croprect:CGRect = CGRectMake(topLeftX, topLeftY, width, height)
+        // Draw new image in current graphics context
+        var imageRef = CGImageCreateWithImageInRect(image.CGImage, croprect)
+        // Create new cropped UIImage
+        let croppedImage:UIImage! = UIImage(CGImage: imageRef)
         return croppedImage
     }
     
@@ -451,14 +526,14 @@ class ViewController: UIViewController, F53OSCClientDelegate, F53OSCPacketDestin
         let imageSize = CGSize(width: screenSize.width, height: label.bounds.height+20)
         let blockView = UIImageView(frame: CGRect(origin: CGPoint(x: 0, y: label.center.y-label.bounds.height/2-5), size: imageSize))
         self.view.addSubview(blockView)
-        let image = drawCustomImage(imageSize)
+        let image = drawCustomImage(imageSize, color: blueColor)
         blockView.image = image
         blockView.alpha = 0.92
         view.bringSubviewToFront(blockView)
         return blockView
     }
     
-    func drawCustomImage(size: CGSize) -> UIImage {
+    func drawCustomImage(size: CGSize, color:UIColor) -> UIImage {
         // Setup our context
         let bounds = CGRect(origin: CGPoint.zeroPoint, size: size)
         let opaque = false
@@ -468,7 +543,7 @@ class ViewController: UIViewController, F53OSCClientDelegate, F53OSCPacketDestin
         
         // Setup complete, do drawing here
         //CGContextSetStrokeColorWithColor(context, UIColor.redColor().CGColor)
-        CGContextSetFillColorWithColor(context, blueColor.CGColor)
+        CGContextSetFillColorWithColor(context, color.CGColor)
         CGContextSetLineWidth(context, 0.0)
         
         //CGContextStrokeRect(context, bounds)
