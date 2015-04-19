@@ -19,6 +19,8 @@ let greenColor:UIColor = colorWithRGB(0x86cc7d, alpha: 1.0)
 let blueColor:UIColor =  colorWithRGB(0x336699, alpha: 1.0)
 let pinkColor:UIColor =  colorWithRGB(0xff6666, alpha: 0.9)
 let yellowColor:UIColor = colorWithRGB(0xffff66, alpha: 0.8)
+let transparentPinkColor: UIColor = colorWithRGB(0xff6666, alpha: 0.7)
+let transparentGrayColor: UIColor = colorWithRGB(0x333333, alpha: 0.7)
 let lineGranphbgColor:UIColor =  colorWithRGB(0xe3f2f6, alpha: 1.0)
 
 // osc

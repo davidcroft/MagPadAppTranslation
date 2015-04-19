@@ -19,6 +19,9 @@ class ViewController: UIViewController, F53OSCClientDelegate, F53OSCPacketDestin
     // OSC
     var oscClient:F53OSCClient = F53OSCClient()
     var oscServer:F53OSCServer = F53OSCServer()
+    var reminderView: UIImageView!
+    var reminderViewTimer: NSTimer!
+    var reminderViewLabel: UILabel!
     
     // average filter
     let NumColumns = 6
@@ -34,7 +37,7 @@ class ViewController: UIViewController, F53OSCClientDelegate, F53OSCPacketDestin
     var smoothAvgColPrev:Double = 0.0
     //let smoothCntTotal:Int = 5
     //var smoothFlag:Bool = false
-    
+    var beginUpdate:Bool = true
     
     // Buffer
     var magBuf:DualArrayBuffer = DualArrayBuffer(bufSize: BUFFERSIZE)
@@ -62,6 +65,9 @@ class ViewController: UIViewController, F53OSCClientDelegate, F53OSCPacketDestin
     var transRectStartX: CGFloat = 0.0
     var transRectStartY: CGFloat = 0.0
     var transRectSelectView: UIImageView!
+    var transRectSelectLabel: UILabel!
+    var transScreenTopLeftX: CGFloat! = 0
+    var transScreenTopLeftY: CGFloat! = 0
     
     var debugCnt:UInt = 0
 
@@ -113,7 +119,7 @@ class ViewController: UIViewController, F53OSCClientDelegate, F53OSCPacketDestin
         let doneAction = UIAlertAction(title: "Done", style: .Default, handler: {
             action in
             // get user input first to update total page number
-            let userText:UITextField = ipAddrAlert.textFields?.first as UITextField
+            let userText:UITextField = ipAddrAlert.textFields?.first as! UITextField
             sendHost = userText.text
             println("set IP addr for send host to \(userText.text)")
         })
@@ -210,8 +216,8 @@ class ViewController: UIViewController, F53OSCClientDelegate, F53OSCPacketDestin
         // create a new thread to get URL from parse and set webview
         //println("receive OSC message")
         dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), { () -> Void in
-            var locRow:Double = message.arguments.first as Double
-            var locCol:Double = message.arguments.last as Double
+            var locRow:Double = message.arguments.first as! Double
+            var locCol:Double = message.arguments.last as! Double
             
             // offset
             //locRow = locRow + 1
@@ -224,12 +230,16 @@ class ViewController: UIViewController, F53OSCClientDelegate, F53OSCPacketDestin
             })
             //println("new location: \(locRow), \(locCol)")
             
-            // setScrollViewOffset
-            let deltaRow = (self.smoothAvgRow - self.smoothAvgRowPrev) * (self.smoothAvgRow - self.smoothAvgRowPrev)
-            let deltaCol = (self.smoothAvgCol - self.smoothAvgColPrev) * (self.smoothAvgCol - self.smoothAvgColPrev)
-            if (sqrt(deltaRow + deltaCol) > 0.1) {
-                self.setScrollViewOffset(self.smoothAvgRow, colVal: self.smoothAvgCol)
-                //self.setScrollViewOffset(locRow, colVal: locCol)
+            // make sure to stop updating if user is trying to select an area for translation
+            if (self.beginUpdate) {
+                // setScrollViewOffset
+                let deltaRow = (self.smoothAvgRow - self.smoothAvgRowPrev) * (self.smoothAvgRow - self.smoothAvgRowPrev)
+                let deltaCol = (self.smoothAvgCol - self.smoothAvgColPrev) * (self.smoothAvgCol - self.smoothAvgColPrev)
+                if (sqrt(deltaRow + deltaCol) > 0.1) {
+                    self.setScrollViewOffset(self.smoothAvgRow, colVal: self.smoothAvgCol)
+                    println("move to offset: \(self.smoothAvgRow), \(self.smoothAvgCol)")
+                    //self.setScrollViewOffset(locRow, colVal: locCol)
+                }
             }
         })
     }
@@ -274,6 +284,7 @@ class ViewController: UIViewController, F53OSCClientDelegate, F53OSCPacketDestin
         // start loading indicator
         dispatch_async(dispatch_get_main_queue(), { () -> Void in
             self.loadingIndicator.hidden = false
+            self.loadingIndicator.color = UIColor.whiteColor()
             self.view.bringSubviewToFront(self.loadingIndicator)
             self.loadingIndicator.startAnimating()
         })
@@ -302,8 +313,15 @@ class ViewController: UIViewController, F53OSCClientDelegate, F53OSCPacketDestin
         // enable tap gesture
         var tapRecognizer = UITapGestureRecognizer(target: self, action: "scrollViewTapped:")
         tapRecognizer.numberOfTapsRequired = 1
-        tapRecognizer.numberOfTouchesRequired = 1
+        //tapRecognizer.numberOfTouchesRequired = 1
         scrollView.addGestureRecognizer(tapRecognizer)
+        
+        var doubleTapRecognizer = UITapGestureRecognizer(target: self, action: "scrollViewDoubleTapped:")
+        doubleTapRecognizer.numberOfTapsRequired = 2
+        //doubleTapRecognizer.numberOfTouchesRequired = 2
+        scrollView.addGestureRecognizer(doubleTapRecognizer)
+        
+        tapRecognizer.requireGestureRecognizerToFail(doubleTapRecognizer)
         
         var panRecognizer = UIPanGestureRecognizer(target: self, action: "scrollViewPanned:")
         scrollView.addGestureRecognizer(panRecognizer)
@@ -317,29 +335,64 @@ class ViewController: UIViewController, F53OSCClientDelegate, F53OSCPacketDestin
         if (xVal > 0 && xVal < width && yVal > 0 && yVal < height) {
             scrollView.setContentOffset(CGPoint(x: xVal, y: yVal), animated: true)
         }
+        
+        // storage offset
+        self.transScreenTopLeftX = CGFloat(xVal)
+        self.transScreenTopLeftY = CGFloat(yVal)
     }
     
     func scrollViewTapped(recognizer: UITapGestureRecognizer) {
         
-        /*let pointInView = recognizer.locationInView(imageView)
-        //println("tap location: x \(pointInView.x)  y \(pointInView.y)")
-        // convert x, y into inches
-        let colInch = (Double(pointInView.x) / Double(imageView.bounds.width)) * pdfWidth
-        let rowInch = (Double(pointInView.y) / Double(imageView.bounds.height)) * pdfHeight
-        println("tap location: row \(rowInch)'' col \(colInch)''")
+        println("single tapped")
         
-        // mapping row and col
-        println("mapping pdf Index: \(colInch), \(rowInch)")*/
-        
-        if (self.transRectSelectView != nil && self.transRectSelectView.isDescendantOfView(self.view)) {
-            //println("yes")
-            self.transRectSelectView.removeFromSuperview()
-        }
+        // clear selection rect if there exists one
+        clearTransSelection()
         
         if (self.translateTxt.alpha == 1) {
             fadeOutLabel(self.translateTxt)
         } else {
             fadeInLabel(self.translateTxt)
+        }
+        
+        /*if (self.beginUpdate) {
+            self.beginUpdate = false
+        } else {
+            self.beginUpdate = true
+        }*/
+    }
+    
+    func scrollViewDoubleTapped(recognizer: UITapGestureRecognizer) {
+        
+        println("double tapped")
+        
+        clearTransSelection()
+        
+        if (self.beginUpdate) {
+            // disable updating
+            self.beginUpdate = false
+            
+            let size = UIScreen.mainScreen().bounds.height/2
+            let startX = UIScreen.mainScreen().bounds.width/2-size/2
+            let startY = UIScreen.mainScreen().bounds.height/2-size/2
+            let labelRect = CGRectMake(startX, startY, size, size)
+            let labelCenter = CGPointMake(UIScreen.mainScreen().bounds.width/2, UIScreen.mainScreen().bounds.height/2)
+            drawCustomizedLabel(labelRect, center: labelCenter, str: "Stop Updating", bkColor: transparentGrayColor, duration: NSTimeInterval(0.5))
+        } else {
+            // continue updating
+            self.beginUpdate = true
+            
+            let size = UIScreen.mainScreen().bounds.height/2
+            let startX = UIScreen.mainScreen().bounds.width/2-size/2
+            let startY = UIScreen.mainScreen().bounds.height/2-size/2
+            let labelRect = CGRectMake(startX, startY, size, size)
+            let labelCenter = CGPointMake(UIScreen.mainScreen().bounds.width/2, UIScreen.mainScreen().bounds.height/2)
+            drawCustomizedLabel(labelRect, center: labelCenter, str: "Start Updating", bkColor: transparentPinkColor, duration: NSTimeInterval(0.5))
+        }
+    }
+    
+    func dismissReminderViewTimer(timer:NSTimer) {
+        if (self.transRectSelectLabel != nil && self.transRectSelectLabel.isDescendantOfView(self.view)) {
+            self.transRectSelectLabel.removeFromSuperview()
         }
     }
     
@@ -352,33 +405,79 @@ class ViewController: UIViewController, F53OSCClientDelegate, F53OSCPacketDestin
         let width = abs(x-transRectStartX)
         let height = abs(y-transRectStartY)
         
-        let startX = min(x, transRectStartX)
-        let startY = min(y, transRectStartY)
+        var startX = min(x, transRectStartX)
+        var startY = min(y, transRectStartY)
         if (recognizer.state == UIGestureRecognizerState.Began) {
+            
             println("STATE BEGIN: (\(x), \(y))")
+            // stop offset updating
+            self.beginUpdate = false
+            println("set beginUpdate to false")
+            
+            //self.oscServer.stopListening()
+            // storage start position
             transRectStartX = x;
             transRectStartY = y;
+            // clear translate label if there exists one
+            if (self.transRectSelectLabel != nil && self.transRectSelectLabel.isDescendantOfView(self.view)) {
+                self.transRectSelectLabel.removeFromSuperview()
+            }
+            
         } else if (recognizer.state == UIGestureRecognizerState.Changed) {
+            
+            // draw rectangle from start position
             let transRectEndX = x;
             let transRectEndY = y;
-            drawPanSelectionRect(startX, startY: startY, width: width, height: height)
+            println("startX = \(startX), startY = \(startY)")
+            drawPanSelectionRect(startX-self.scrollView.contentOffset.x, startY: startY-self.scrollView.contentOffset.y, width: width, height: height)
+            
         } else if (recognizer.state == UIGestureRecognizerState.Ended) {
+            
             println("STATE END: (\(x), \(y))")
             let transRectEndX = x;
             let transRectEndY = y;
-            drawPanSelectionRect(transRectStartX, startY: transRectStartY, width: width, height: height)
+            drawPanSelectionRect(startX-self.scrollView.contentOffset.x, startY: startY-self.scrollView.contentOffset.y, width: width, height: height)
             
             /////////////////////////////////////
-            /////////////////////////////////////
-            /////////////////////////////////////
             // OCR + translation
-            if (width > 50 && height > 20) {
-                self.translateTxt.textAlignment = .Center
-                self.translateTxt.text = "Text Recognition ..."
+            if (width > 40 && height > 20) {
+                // crop image for translation
                 let img = cropImageRect(imageView.image!, topLeftX: startX, topLeftY: startY, width: width, height: height)
-                self.performOCR(img)
-                fadeInLabel(self.translateTxt)
+                
+                // draw translate label
+                // notice crop and display rect is not from the same postion, since there is an offset for scrollview, so update startX and startY here
+                startX = startX - self.scrollView.contentOffset.x
+                startY = startY - self.scrollView.contentOffset.y
+                let labelRect = CGRectMake(startX, startY, width, height)
+                
+                // compare to transScreenTopLeftX and transScreenTopLeftY to decide the position of rect
+                let screenHeight = UIScreen.mainScreen().bounds.height
+                if (height < screenHeight/3) {
+                    if (startY + height/2 < transScreenTopLeftY + screenHeight/2) {
+                        let labelCenter = CGPointMake(startX+width/2, startY+height+height/2+5)
+                        drawTranslateLabel(labelRect, center: labelCenter, str: "Translating ...")
+                        self.performOCR(img, disLabel: self.transRectSelectLabel)
+                    } else if (startY + height/2 >= transScreenTopLeftY + screenHeight/2) {
+                        let labelCenter = CGPointMake(startX+width/2, startY-height/2-5)
+                        drawTranslateLabel(labelRect, center: labelCenter, str: "Translating ...")
+                        self.performOCR(img, disLabel: self.transRectSelectLabel)
+                    }
+                } else {
+                    // selection area is too big, use botton section
+                    self.translateTxt.textAlignment = .Center
+                    self.translateTxt.text = "Text Recognition ..."
+                    self.performOCR(img, disLabel: self.translateTxt)
+                    fadeInLabel(self.translateTxt)
+                }
+            } else {
+                // rect area is too small, cancel rect
+                clearTransSelection()
             }
+            /////////////////////////////////////
+            
+            // restore position updating
+            //self.beginUpdate = true
+            
         }
     }
     
@@ -395,6 +494,71 @@ class ViewController: UIViewController, F53OSCClientDelegate, F53OSCPacketDestin
         transRectSelectView.image = drawCustomImage(imageSize, color: yellowColor)
         //transRectSelectView.alpha = 0.8
         self.view.addSubview(transRectSelectView)
+    }
+    
+    func drawTranslateLabel(rect: CGRect, center: CGPoint, str: String) {
+        if (self.transRectSelectLabel != nil && self.transRectSelectLabel.isDescendantOfView(self.view)) {
+            self.transRectSelectLabel.removeFromSuperview()
+        }
+        // draw a rect
+        self.transRectSelectLabel = UILabel(frame: rect)
+        self.transRectSelectLabel.backgroundColor = UIColor.grayColor()
+        self.transRectSelectLabel.textColor = UIColor.whiteColor()
+        self.transRectSelectLabel.font = self.transRectSelectLabel.font.fontWithSize(14)
+        self.transRectSelectLabel.center = center
+        self.transRectSelectLabel.textAlignment = NSTextAlignment.Center
+        self.transRectSelectLabel.text = str
+        self.transRectSelectLabel.lineBreakMode = NSLineBreakMode.ByWordWrapping
+        self.transRectSelectLabel.numberOfLines = 5
+        // set label corner to round
+        self.transRectSelectLabel.layer.cornerRadius = 8
+        self.transRectSelectLabel.layer.borderWidth = 0
+        self.transRectSelectLabel.layer.masksToBounds = true
+        self.view.addSubview(self.transRectSelectLabel)
+    }
+    
+    func drawCustomizedLabel(rect: CGRect, center: CGPoint, str: String, bkColor: UIColor, duration: NSTimeInterval) {
+        if (self.reminderViewLabel != nil && self.reminderViewLabel.isDescendantOfView(self.view)) {
+            self.reminderViewLabel.removeFromSuperview()
+        }
+        // draw a rect
+        self.reminderViewLabel = UILabel(frame: rect)
+        self.reminderViewLabel.backgroundColor = bkColor
+        self.reminderViewLabel.textColor = UIColor.whiteColor()
+        self.reminderViewLabel.alpha = 0
+        self.reminderViewLabel.font = self.reminderViewLabel.font.fontWithSize(18)
+        self.reminderViewLabel.center = center
+        self.reminderViewLabel.textAlignment = NSTextAlignment.Center
+        self.reminderViewLabel.text = str
+        // set label corner to round
+        self.reminderViewLabel.layer.cornerRadius = 12
+        self.reminderViewLabel.layer.borderWidth = 0
+        self.reminderViewLabel.layer.masksToBounds = true
+        self.view.addSubview(self.reminderViewLabel)
+        // display
+        UIView.animateWithDuration(duration, delay: 0, options: nil, animations: { () -> Void in
+            self.reminderViewLabel.alpha = 1
+        }) { (finished) -> Void in
+            UIView.animateWithDuration(duration, delay: 0.6, usingSpringWithDamping: 0.9, initialSpringVelocity: 0.0, options: nil, animations: {
+                self.reminderViewLabel.alpha = 0
+            }, completion: { (finished) -> Void in
+                if (self.reminderViewLabel != nil && self.reminderViewLabel.isDescendantOfView(self.view)) {
+                    self.reminderViewLabel.removeFromSuperview()
+                }
+            })
+        }
+        
+    }
+    
+    func clearTransSelection() {
+        if (self.transRectSelectView != nil && self.transRectSelectView.isDescendantOfView(self.view)) {
+            //println("yes")
+            self.transRectSelectView.removeFromSuperview()
+        }
+        // clear translate label if there exists one
+        if (self.transRectSelectLabel != nil && self.transRectSelectLabel.isDescendantOfView(self.view)) {
+            self.transRectSelectLabel.removeFromSuperview()
+        }
     }
     
     ////////////////////////////////////
@@ -455,16 +619,19 @@ class ViewController: UIViewController, F53OSCClientDelegate, F53OSCPacketDestin
         return scaledImage
     }
     
-    func performOCR(image: UIImage) {
+    func performOCR(image: UIImage, disLabel: UILabel) {
         dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), { () -> Void in
             let scaledImage = self.scaleImage(image, maxDimension: OCRMAXDIMENSION)
-            self.startLoadingIndicator()
+            if (disLabel == self.translateTxt) {
+                // set loading indicator only for translateTxt
+                self.startLoadingIndicator()
+            }
             println("Texts Recognition ...")
-            self.performImageRecognition(scaledImage)
+            self.performImageRecognition(scaledImage, disLabel: disLabel)
         })
     }
     
-    func performImageRecognition(image: UIImage) {
+    func performImageRecognition(image: UIImage, disLabel: UILabel) {
         // 1
         let tesseract = G8Tesseract()
         // 2
@@ -480,17 +647,22 @@ class ViewController: UIViewController, F53OSCClientDelegate, F53OSCPacketDestin
         tesseract.image = image.g8_blackAndWhite()
         tesseract.recognize()
         // 7 perform online translation
-        dispatch_async(dispatch_get_main_queue(), {
-            self.translateTxt.text = "Text Translation ..."
-            println("Translation ...")
-        })
+        if (disLabel == self.translateTxt) {
+            dispatch_async(dispatch_get_main_queue(), {
+                disLabel.text = "Text Translating ..."
+                println("Translation ...")
+            })
+        }
         println(tesseract.recognizedText)
         UIApplication.sharedApplication().networkActivityIndicatorVisible = true
         self.translator!.translate(tesseract.recognizedText) { translation in
             dispatch_async(dispatch_get_main_queue(), {
                 println(translation)
-                self.translateTxt.textAlignment = .Left
-                self.translateTxt.text = translation
+                if (disLabel == self.translateTxt) {
+                    // if label is self.translateTxt, center alignment
+                    disLabel.textAlignment = .Left
+                }
+                disLabel.text = translation.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
                 // 8
                 self.stopLoadingIndicator()
                 NSLog("MS Translation")
@@ -506,6 +678,7 @@ class ViewController: UIViewController, F53OSCClientDelegate, F53OSCPacketDestin
         UIView.animateWithDuration(1, delay: 0, usingSpringWithDamping: 0.9, initialSpringVelocity: 0.0, options: nil, animations: {
             //self.translateTxt.center = CGPoint(x: self.view.center.x, y: self.view.center.y*3/4)
             self.translateTxt.alpha = 1.0
+            let str = self.translateTxt.text as String!
             self.labelBlockView.alpha = 0.95
         }, completion: nil)
     }
@@ -533,7 +706,11 @@ class ViewController: UIViewController, F53OSCClientDelegate, F53OSCPacketDestin
         return blockView
     }
     
-    func drawCustomImage(size: CGSize, color:UIColor) -> UIImage {
+    func drawCustomImage(size: CGSize, color:UIColor) -> UIImage? {
+        //println("drawCustomImg: \(size.width), \(size.height)")
+        if (size.width <= 0 || size.height <= 0) {
+            return nil
+        }
         // Setup our context
         let bounds = CGRect(origin: CGPoint.zeroPoint, size: size)
         let opaque = false
@@ -543,18 +720,11 @@ class ViewController: UIViewController, F53OSCClientDelegate, F53OSCPacketDestin
         
         // Setup complete, do drawing here
         //CGContextSetStrokeColorWithColor(context, UIColor.redColor().CGColor)
+        
         CGContextSetFillColorWithColor(context, color.CGColor)
         CGContextSetLineWidth(context, 0.0)
-        
         //CGContextStrokeRect(context, bounds)
         CGContextFillRect(context, bounds)
-        
-        /*CGContextBeginPath(context)
-        CGContextMoveToPoint(context, CGRectGetMinX(bounds), CGRectGetMinY(bounds))
-        CGContextAddLineToPoint(context, CGRectGetMaxX(bounds), CGRectGetMaxY(bounds))
-        CGContextMoveToPoint(context, CGRectGetMaxX(bounds), CGRectGetMinY(bounds))
-        CGContextAddLineToPoint(context, CGRectGetMinX(bounds), CGRectGetMaxY(bounds))
-        CGContextStrokePath(context)*/
         
         // Drawing complete, retrieve the finished image and cleanup
         let image = UIGraphicsGetImageFromCurrentImageContext()
@@ -566,7 +736,7 @@ class ViewController: UIViewController, F53OSCClientDelegate, F53OSCPacketDestin
         self.translateTxt.textAlignment = .Center
         self.translateTxt.text = "Text Recognition ..."
         let img = cropImageFromPoint(imageView.image!, topLeftX: CGFloat(self.smoothAvgCol), topLeftY: CGFloat(self.smoothAvgRow))
-        self.performOCR(img)
+        self.performOCR(img, disLabel: self.translateTxt)
         fadeInLabel(self.translateTxt)
     }
 }
