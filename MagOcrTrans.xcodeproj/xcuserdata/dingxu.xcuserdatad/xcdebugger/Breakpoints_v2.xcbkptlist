@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MagPadV3/ViewController.swift"
-            timestampString = "451104377.410154"
+            timestampString = "451612427.4913"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "252"
-            endingLineNumber = "252"
+            startingLineNumber = "368"
+            endingLineNumber = "368"
             landmarkName = "getSmoothResult(_:valCol:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MagPadV3/ViewController.swift"
-            timestampString = "450927724.376026"
+            timestampString = "451612427.4913"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "200"
-            endingLineNumber = "200"
+            startingLineNumber = "316"
+            endingLineNumber = "316"
             landmarkName = "updateMegneto(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -42,11 +42,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MagPadV3/ViewController.swift"
-            timestampString = "450927724.376026"
+            timestampString = "451612427.4913"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "198"
-            endingLineNumber = "198"
+            startingLineNumber = "314"
+            endingLineNumber = "314"
             landmarkName = "updateMegneto(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -58,11 +58,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MagPadV3/ViewController.swift"
-            timestampString = "451104377.410154"
+            timestampString = "451612427.4913"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "279"
-            endingLineNumber = "279"
+            startingLineNumber = "395"
+            endingLineNumber = "395"
             landmarkName = "getSmoothResult(_:valCol:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -74,11 +74,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MagPadV3/ViewController.swift"
-            timestampString = "450927724.376026"
+            timestampString = "451612427.4913"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "191"
-            endingLineNumber = "191"
+            startingLineNumber = "307"
+            endingLineNumber = "307"
             landmarkName = "updateMegneto(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -90,11 +90,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MagPadV3/ViewController.swift"
-            timestampString = "451104377.410154"
+            timestampString = "451612427.4913"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "571"
-            endingLineNumber = "571"
+            startingLineNumber = "866"
+            endingLineNumber = "866"
             landmarkName = "clearTransSelection()"
             landmarkType = "5">
          </BreakpointContent>
@@ -106,11 +106,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MagPadV3/ViewController.swift"
-            timestampString = "451104377.410154"
+            timestampString = "451612427.4913"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "305"
-            endingLineNumber = "305"
+            startingLineNumber = "421"
+            endingLineNumber = "421"
             landmarkName = "initScrollView()"
             landmarkType = "5">
          </BreakpointContent>
@@ -138,75 +138,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MagPadV3/ViewController.swift"
-            timestampString = "451104377.410154"
+            timestampString = "451612427.4913"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "491"
-            endingLineNumber = "491"
-            landmarkName = "scrollViewPanned(_:)"
-            landmarkType = "5">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "MagOcrTrans.ViewController.drawPanSelectionRect (MagOcrTrans.ViewController)(CoreGraphics.CGFloat, startY : CoreGraphics.CGFloat, width : CoreGraphics.CGFloat, height : CoreGraphics.CGFloat) -&gt; ()"
-                  moduleName = "MagOcrTrans"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/dingxu/CMU/Thesis/Projects/MagPad/Codes/MagPadV4_OCRTrans/MagPadV3/ViewController.swift"
-                  timestampString = "450766699.076542"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "374"
-                  endingLineNumber = "374"
-                  offsetFromSymbolStart = "68">
-               </Location>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "MagOcrTrans.ViewController.drawPanSelectionRect (MagOcrTrans.ViewController)(CoreGraphics.CGFloat, startY : CoreGraphics.CGFloat, width : CoreGraphics.CGFloat, height : CoreGraphics.CGFloat) -&gt; ()"
-                  moduleName = "MagOcrTrans"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/dingxu/CMU/Thesis/Projects/MagPad/Codes/MagPadV4_OCRTrans/MagPadV3/ViewController.swift"
-                  timestampString = "450766699.076722"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "374"
-                  endingLineNumber = "374"
-                  offsetFromSymbolStart = "1372">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "MagPadV3/ViewController.swift"
-            timestampString = "451104377.410154"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "473"
-            endingLineNumber = "473"
-            landmarkName = "scrollViewPanned(_:)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "MagPadV3/ViewController.swift"
-            timestampString = "451104377.410154"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "702"
-            endingLineNumber = "702"
+            startingLineNumber = "997"
+            endingLineNumber = "997"
             landmarkName = "fadeOutLabel(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -218,11 +154,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MagPadV3/ViewController.swift"
-            timestampString = "451104377.410154"
+            timestampString = "451612427.4913"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "594"
-            endingLineNumber = "594"
+            startingLineNumber = "889"
+            endingLineNumber = "889"
             landmarkName = "cropImageFromPoint(_:topLeftX:topLeftY:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -234,11 +170,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MagPadV3/ViewController.swift"
-            timestampString = "451104377.410154"
+            timestampString = "451612427.4913"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "595"
-            endingLineNumber = "595"
+            startingLineNumber = "890"
+            endingLineNumber = "890"
             landmarkName = "cropImageFromPoint(_:topLeftX:topLeftY:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -250,11 +186,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MagPadV3/ViewController.swift"
-            timestampString = "451104377.410154"
+            timestampString = "451612427.4913"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "600"
-            endingLineNumber = "600"
+            startingLineNumber = "895"
+            endingLineNumber = "895"
             landmarkName = "cropImageRect(_:topLeftX:topLeftY:width:height:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -278,31 +214,15 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "MagPadV3/ViewController.swift"
-            timestampString = "451104377.410154"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "462"
-            endingLineNumber = "462"
-            landmarkName = "scrollViewPanned(_:)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MagPadV3/ViewController.swift"
-            timestampString = "451104377.410154"
+            timestampString = "451612427.4913"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "631"
-            endingLineNumber = "631"
+            startingLineNumber = "926"
+            endingLineNumber = "926"
             landmarkName = "ViewController"
             landmarkType = "3">
          </BreakpointContent>
@@ -314,11 +234,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MagPadV3/ViewController.swift"
-            timestampString = "451104377.410154"
+            timestampString = "451612427.4913"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "746"
-            endingLineNumber = "746"
+            startingLineNumber = "1041"
+            endingLineNumber = "1041"
             landmarkName = "translateBtn(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -330,11 +250,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MagPadV3/ViewController.swift"
-            timestampString = "451104377.410154"
+            timestampString = "451612427.4913"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "684"
-            endingLineNumber = "684"
+            startingLineNumber = "979"
+            endingLineNumber = "979"
             landmarkName = "fadeInLabel(_:)"
             landmarkType = "5">
             <Locations>
@@ -346,11 +266,11 @@
                   moduleName = "MagOcrTrans"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/dingxu/CMU/Thesis/Projects/MagPad/Codes/MagPadV4_OCRTrans/MagPadV3/ViewController.swift"
-                  timestampString = "450929543.772126"
+                  timestampString = "451603594.080938"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "675"
-                  endingLineNumber = "675"
+                  startingLineNumber = "981"
+                  endingLineNumber = "981"
                   offsetFromSymbolStart = "20">
                </Location>
                <Location
@@ -361,11 +281,11 @@
                   moduleName = "MagOcrTrans"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/dingxu/CMU/Thesis/Projects/MagPad/Codes/MagPadV4_OCRTrans/MagPadV3/ViewController.swift"
-                  timestampString = "450929543.772265"
+                  timestampString = "451603594.081105"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "680"
-                  endingLineNumber = "680"
+                  startingLineNumber = "986"
+                  endingLineNumber = "986"
                   offsetFromSymbolStart = "16">
                </Location>
             </Locations>
@@ -378,11 +298,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MagPadV3/ViewController.swift"
-            timestampString = "451104377.410154"
+            timestampString = "451612427.4913"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "502"
-            endingLineNumber = "502"
+            startingLineNumber = "783"
+            endingLineNumber = "783"
             landmarkName = "drawPanSelectionRect(_:startY:width:height:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -394,11 +314,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MagPadV3/ViewController.swift"
-            timestampString = "451104377.410154"
+            timestampString = "451612427.4913"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "524"
-            endingLineNumber = "524"
+            startingLineNumber = "805"
+            endingLineNumber = "805"
             landmarkName = "drawTranslateLabel(_:center:str:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -410,11 +330,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MagPadV3/ViewController.swift"
-            timestampString = "451104377.410154"
+            timestampString = "451612427.4913"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "523"
-            endingLineNumber = "523"
+            startingLineNumber = "804"
+            endingLineNumber = "804"
             landmarkName = "drawTranslateLabel(_:center:str:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -426,11 +346,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MagPadV3/ViewController.swift"
-            timestampString = "451104377.410154"
+            timestampString = "451612427.4913"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "506"
-            endingLineNumber = "506"
+            startingLineNumber = "787"
+            endingLineNumber = "787"
             landmarkName = "drawPanSelectionRect(_:startY:width:height:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -442,11 +362,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MagPadV3/ViewController.swift"
-            timestampString = "451104377.410154"
+            timestampString = "451612427.4913"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "404"
-            endingLineNumber = "404"
+            startingLineNumber = "551"
+            endingLineNumber = "551"
             landmarkName = "dismissReminderViewTimer(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -454,63 +374,15 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "MagPadV3/ViewController.swift"
-            timestampString = "451104377.410154"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "389"
-            endingLineNumber = "389"
-            landmarkName = "scrollViewDoubleTapped(_:)"
-            landmarkType = "5">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "MagOcrTrans.ViewController.scrollViewDoubleTapped (MagOcrTrans.ViewController)(ObjectiveC.UITapGestureRecognizer) -&gt; ()"
-                  moduleName = "MagOcrTrans"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/dingxu/CMU/Thesis/Projects/MagPad/Codes/MagPadV4_OCRTrans/MagPadV3/ViewController.swift"
-                  timestampString = "450929543.773901"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "379"
-                  endingLineNumber = "379"
-                  offsetFromSymbolStart = "1632">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "MagOcrTrans.ViewController.scrollViewDoubleTapped (MagOcrTrans.ViewController)(ObjectiveC.UITapGestureRecognizer) -&gt; ()"
-                  moduleName = "MagOcrTrans"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/dingxu/CMU/Thesis/Projects/MagPad/Codes/MagPadV4_OCRTrans/MagPadV3/ViewController.swift"
-                  timestampString = "450929543.774037"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "379"
-                  endingLineNumber = "379"
-                  offsetFromSymbolStart = "1880">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MagPadV3/ViewController.swift"
-            timestampString = "451104377.410154"
+            timestampString = "451612427.4913"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "550"
-            endingLineNumber = "550"
+            startingLineNumber = "831"
+            endingLineNumber = "831"
             landmarkName = "drawCustomizedLabel(_:center:str:bkColor:duration:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -522,91 +394,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MagPadV3/ViewController.swift"
-            timestampString = "451104377.410154"
+            timestampString = "451612427.4913"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "552"
-            endingLineNumber = "552"
-            landmarkName = "drawCustomizedLabel(_:center:str:bkColor:duration:)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "MagPadV3/ViewController.swift"
-            timestampString = "451104377.410154"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "399"
-            endingLineNumber = "399"
-            landmarkName = "scrollViewDoubleTapped(_:)"
-            landmarkType = "5">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "MagOcrTrans.ViewController.scrollViewDoubleTapped (MagOcrTrans.ViewController)(ObjectiveC.UITapGestureRecognizer) -&gt; ()"
-                  moduleName = "MagOcrTrans"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/dingxu/CMU/Thesis/Projects/MagPad/Codes/MagPadV4_OCRTrans/MagPadV3/ViewController.swift"
-                  timestampString = "450929543.775252"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "389"
-                  endingLineNumber = "389"
-                  offsetFromSymbolStart = "3292">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "MagOcrTrans.ViewController.scrollViewDoubleTapped (MagOcrTrans.ViewController)(ObjectiveC.UITapGestureRecognizer) -&gt; ()"
-                  moduleName = "MagOcrTrans"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/dingxu/CMU/Thesis/Projects/MagPad/Codes/MagPadV4_OCRTrans/MagPadV3/ViewController.swift"
-                  timestampString = "450929543.775385"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "389"
-                  endingLineNumber = "389"
-                  offsetFromSymbolStart = "3560">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "MagPadV3/ViewController.swift"
-            timestampString = "451104377.410154"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "536"
-            endingLineNumber = "536"
-            landmarkName = "drawCustomizedLabel(_:center:str:bkColor:duration:)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "MagPadV3/ViewController.swift"
-            timestampString = "451104377.410154"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "531"
-            endingLineNumber = "531"
+            startingLineNumber = "833"
+            endingLineNumber = "833"
             landmarkName = "drawCustomizedLabel(_:center:str:bkColor:duration:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -618,27 +410,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MagPadV3/ViewController.swift"
-            timestampString = "451104377.410154"
+            timestampString = "451612427.4913"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "532"
-            endingLineNumber = "532"
-            landmarkName = "drawCustomizedLabel(_:center:str:bkColor:duration:)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "MagPadV3/ViewController.swift"
-            timestampString = "451104377.410154"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "537"
-            endingLineNumber = "537"
+            startingLineNumber = "817"
+            endingLineNumber = "817"
             landmarkName = "drawCustomizedLabel(_:center:str:bkColor:duration:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -650,12 +426,204 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MagPadV3/ViewController.swift"
-            timestampString = "451104377.410154"
+            timestampString = "451612427.4913"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "553"
-            endingLineNumber = "553"
+            startingLineNumber = "812"
+            endingLineNumber = "812"
             landmarkName = "drawCustomizedLabel(_:center:str:bkColor:duration:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MagPadV3/ViewController.swift"
+            timestampString = "451612427.4913"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "813"
+            endingLineNumber = "813"
+            landmarkName = "drawCustomizedLabel(_:center:str:bkColor:duration:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MagPadV3/ViewController.swift"
+            timestampString = "451612427.4913"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "818"
+            endingLineNumber = "818"
+            landmarkName = "drawCustomizedLabel(_:center:str:bkColor:duration:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MagPadV3/ViewController.swift"
+            timestampString = "451612427.4913"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "834"
+            endingLineNumber = "834"
+            landmarkName = "drawCustomizedLabel(_:center:str:bkColor:duration:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MagPadV3/ViewController.swift"
+            timestampString = "451612427.4913"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "205"
+            endingLineNumber = "205"
+            landmarkName = "takePhotoOrUseLib()"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MagPadV3/ViewController.swift"
+            timestampString = "451612427.4913"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "215"
+            endingLineNumber = "215"
+            landmarkName = "takePhotoOrUseLib()"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MagPadV3/ViewController.swift"
+            timestampString = "451612427.4913"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "853"
+            endingLineNumber = "853"
+            landmarkName = "drawImagePickerSection()"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MagPadV3/ViewController.swift"
+            timestampString = "451612427.4913"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "259"
+            endingLineNumber = "259"
+            landmarkName = "imagePickerController(_:didFinishPickingMediaWithInfo:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MagPadV3/ViewController.swift"
+            timestampString = "451612427.4913"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "683"
+            endingLineNumber = "683"
+            landmarkName = "scrollViewPanned(_:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MagPadV3/ViewController.swift"
+            timestampString = "451612427.4913"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1112"
+            endingLineNumber = "1112"
+            landmarkName = "takePictureWithinRange(_:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MagPadV3/ViewController.swift"
+            timestampString = "451612427.4913"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "204"
+            endingLineNumber = "204"
+            landmarkName = "takePhotoOrUseLib()"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MagPadV3/ViewController.swift"
+            timestampString = "451612427.4913"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1112"
+            endingLineNumber = "1112"
+            landmarkName = "takePictureWithinRange(_:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MagPadV3/ViewController.swift"
+            timestampString = "451612427.4913"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "241"
+            endingLineNumber = "241"
+            landmarkName = "imagePickerController(_:didFinishPickingMediaWithInfo:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

@@ -9,12 +9,13 @@
 import UIKit
 import CoreMotion
 
-class ViewController: UIViewController, F53OSCClientDelegate, F53OSCPacketDestination {
+class ViewController: UIViewController, F53OSCClientDelegate, F53OSCPacketDestination,  UIImagePickerControllerDelegate, UINavigationControllerDelegate{
     
     @IBOutlet var locLabel: UILabel!
     @IBOutlet var loadingIndicator: UIActivityIndicatorView!
     @IBOutlet var translateTxt: UILabel!
     @IBOutlet var translateBtn: UIButton!
+    @IBOutlet var contentPickerBtn: UIButton!
     
     // OSC
     var oscClient:F53OSCClient = F53OSCClient()
@@ -60,6 +61,16 @@ class ViewController: UIViewController, F53OSCClientDelegate, F53OSCPacketDestin
     var croppedImgView: UIImageView!
     var labelBlockView: UIImageView!
     
+    // camera
+    var imagePicker:UIImagePickerController!
+    var imagePickerImg: UIImage!
+    var imagePickerRectSelectView: UIImageView!
+    var imagePickerView: UIImageView!
+    // index: 0 topLeft, 1 topRight, 2 bottomLeft, 3 bottomRight
+    var imagePickerRectPts = [CGPoint](count: 4, repeatedValue: CGPointMake(0, 0))
+    var imagePickerRectIdx = -1
+    let imagePickerRectIdxDetecThres:Int = 30   // threshold for detect index
+    
     // translation
     var translator: Polyglot!
     var transRectStartX: CGFloat = 0.0
@@ -68,67 +79,13 @@ class ViewController: UIViewController, F53OSCClientDelegate, F53OSCPacketDestin
     var transRectSelectLabel: UILabel!
     var transScreenTopLeftX: CGFloat! = 0
     var transScreenTopLeftY: CGFloat! = 0
+    var startTranslate: Bool = true   // false for choosing image content and true for translation
     
     var debugCnt:UInt = 0
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        
-        stopLoadingIndicator()
-        
-        // init scrollView
-        initScrollView()
-        
-        // init translator
-        translator = Polyglot(clientId: "davidcroft_OCR", clientSecret: "6lF5EaKBjX/ZXkEZ5IE+imjbh5slYXSqiTErclaaec8=")
-        translator.fromLanguage = Language.English
-        translator.toLanguage = Language.ChineseSimplified
-        
-        // GUI
-        labelBlockView = drawBackgroundBlock(translateTxt)
-        labelBlockView.alpha = 0
-        self.translateTxt.text = ""
-        self.translateTxt.lineBreakMode = NSLineBreakMode.ByWordWrapping
-        self.translateTxt.numberOfLines = 5
-        self.translateTxt.textColor = UIColor.whiteColor()
-        self.translateTxt.alpha = 0.0
-        view.bringSubviewToFront(self.translateTxt)
-        //fadeInLabel(self.translateTxt)
-        
-        translateBtn.backgroundColor = pinkColor
-        translateBtn.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
-        view.bringSubviewToFront(self.translateBtn)
-        
-        // debug
-        //let img = cropImageFromPoint(imageView.image!, topLeftX: 0.7, topLeftY: 0.8)
-        //self.performOCR(img)
-        //croppedImgView = UIImageView(image: img)
-        //croppedImgView.bounds.size = view.bounds.size
-        //view.addSubview(croppedImgView)
-        //setScrollViewOffset(6, colVal: 0.2)
-    }
-    
-    override func viewDidAppear(animated: Bool) {
-        // set up a ip addr for OSC host
-        let ipAddrAlert:UIAlertController = UIAlertController(title: nil, message: "Set up IP address for OSC", preferredStyle: .Alert)
-        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: {
-            action in
-            exit(0)
-        })
-        let doneAction = UIAlertAction(title: "Done", style: .Default, handler: {
-            action in
-            // get user input first to update total page number
-            let userText:UITextField = ipAddrAlert.textFields?.first as! UITextField
-            sendHost = userText.text
-            println("set IP addr for send host to \(userText.text)")
-        })
-        ipAddrAlert.addAction(cancelAction)
-        ipAddrAlert.addAction(doneAction)
-        ipAddrAlert.addTextFieldWithConfigurationHandler { (textField) -> Void in
-            textField.placeholder = "type in IP address here"
-        }
-        self.presentViewController(ipAddrAlert, animated: true, completion: nil)
         
         // init magnetometer
         self.motionManager.startMagnetometerUpdates()
@@ -145,13 +102,74 @@ class ViewController: UIViewController, F53OSCClientDelegate, F53OSCPacketDestin
         self.oscServer.port = recvPort
         self.oscServer.startListening()
         
-        // label init
-        self.locLabel.text = "Current Location: 0"
-        
         // buffer init
         for column in 0...NumRows {
             smoothBuf.append(Array(count:NumColumns, repeatedValue:Double()))
         }
+        
+        // init scrollView
+        initScrollView()
+        
+        // init translator
+        translator = Polyglot(clientId: "davidcroft_OCR", clientSecret: "6lF5EaKBjX/ZXkEZ5IE+imjbh5slYXSqiTErclaaec8=")
+        translator.fromLanguage = Language.English
+        translator.toLanguage = Language.ChineseSimplified
+        
+        // GUI
+        //self.locLabel.text = "Current Location: 0"
+        labelBlockView = drawBackgroundBlock(translateTxt)
+        labelBlockView.alpha = 0
+        self.translateTxt.text = ""
+        self.translateTxt.lineBreakMode = NSLineBreakMode.ByWordWrapping
+        self.translateTxt.numberOfLines = 5
+        self.translateTxt.textColor = UIColor.whiteColor()
+        self.translateTxt.alpha = 0.0
+        view.bringSubviewToFront(self.translateTxt)
+        //fadeInLabel(self.translateTxt)
+        
+        translateBtn.backgroundColor = pinkColor
+        translateBtn.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
+        view.bringSubviewToFront(self.translateBtn)
+        
+        contentPickerBtn.backgroundColor = purpleColor
+        contentPickerBtn.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
+        view.bringSubviewToFront(self.contentPickerBtn)
+        
+        // debug
+        //let img = cropImageFromPoint(imageView.image!, topLeftX: 0.7, topLeftY: 0.8)
+        //self.performOCR(img)
+        //croppedImgView = UIImageView(image: img)
+        //croppedImgView.bounds.size = view.bounds.size
+        //view.addSubview(croppedImgView)
+        //setScrollViewOffset(6, colVal: 0.2)
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        if (sendHost.isEmpty) {
+            // set up a ip addr for OSC host
+            let ipAddrAlert:UIAlertController = UIAlertController(title: nil, message: "Set up IP address for OSC", preferredStyle: .Alert)
+            let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: {
+                action in
+                exit(0)
+            })
+            let doneAction = UIAlertAction(title: "Done", style: .Default, handler: {
+                action in
+                // get user input first to update total page number
+                let userText:UITextField = ipAddrAlert.textFields?.first as! UITextField
+                sendHost = userText.text
+                println("set IP addr for send host to \(userText.text)")
+                
+                // choose image content
+                //self.takePhotoOrUseLib()
+            })
+            ipAddrAlert.addAction(cancelAction)
+            ipAddrAlert.addAction(doneAction)
+            ipAddrAlert.addTextFieldWithConfigurationHandler { (textField) -> Void in
+                textField.placeholder = "type in IP address here"
+            }
+            self.presentViewController(ipAddrAlert, animated: true, completion: nil)
+        }
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -159,6 +177,104 @@ class ViewController: UIViewController, F53OSCClientDelegate, F53OSCPacketDestin
         // Dispose of any resources that can be recreated.
     }
     
+    // image picker / camera alert view
+    func takePhotoOrUseLib() {
+        let imagePickerActionSheet = UIAlertController(title: "Choose Page Content",
+            message: nil, preferredStyle: .ActionSheet)
+        
+        if UIImagePickerController.isSourceTypeAvailable(.Camera) {
+            let cameraButton = UIAlertAction(title: "Camera",
+                style: .Default) { (alert) -> Void in
+                    self.imagePicker = UIImagePickerController()
+                    self.imagePicker.delegate = self
+                    self.imagePicker.sourceType = .Camera
+                    self.imagePicker.showsCameraControls = false
+                    self.imagePicker.navigationBarHidden = true
+                    self.imagePicker.allowsEditing = false
+                    
+                    let translate = CGAffineTransformMakeTranslation(0.0, CAMERAOFFSETY);
+                    self.imagePicker.cameraViewTransform = translate
+                    
+                    //let scale = CGAffineTransformScale(translate, 1.333333, 1.333333);
+                    //self.imagePicker.cameraViewTransform = scale
+                    
+                    // add overlay view
+                    self.imagePicker.cameraOverlayView = self.createOverlayView()
+                    
+                    // show camera view
+                    self.presentViewController(self.imagePicker, animated: true, completion: nil)
+            }
+            imagePickerActionSheet.addAction(cameraButton)
+        }
+        
+        let libraryButton = UIAlertAction(title: "Choose Existing",
+            style: .Default) { (alert) -> Void in
+                self.imagePicker = UIImagePickerController()
+                self.imagePicker.delegate = self
+                self.imagePicker.sourceType = .PhotoLibrary
+                self.presentViewController(self.imagePicker,
+                    animated: true,
+                    completion: nil)
+        }
+        imagePickerActionSheet.addAction(libraryButton)
+        
+        let cancelButton = UIAlertAction(title: "Cancel",
+            style: .Cancel) { (alert) -> Void in
+        }
+        imagePickerActionSheet.addAction(cancelButton)
+        
+        presentViewController(imagePickerActionSheet, animated: true,
+            completion: nil)
+        
+        /*if UIDevice.currentDevice().userInterfaceIdiom == .Phone {
+            self.presentViewController(alert, animated: true, completion: nil)
+        } else {
+            popover=UIPopoverController(contentViewController: alert)
+            popover!.presentPopoverFromRect(btnClickMe.frame, inView: self.view, permittedArrowDirections: UIPopoverArrowDirection.Any, animated: true)
+        }*/
+    }
+    
+    //////////////////////////////
+    // Image Picker Delegator
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
+        
+        picker.dismissViewControllerAnimated(true, completion: nil)
+        
+        imagePickerImg = info[UIImagePickerControllerOriginalImage] as! UIImage
+        
+        imagePickerView = UIImageView(image: imagePickerImg)
+        imagePickerView.transform = CGAffineTransformMakeRotation((270.0 * CGFloat(M_PI)) / 180.0)
+        imagePickerView.frame = CGRectMake(0, 0, self.view.frame.width*(imagePickerImg.size.height/imagePickerImg.size.width), self.view.frame.width)
+        self.view.addSubview(imagePickerView)
+        
+        // set startTranslate to false
+        startTranslate = false
+        
+        // stop position update
+        self.beginUpdate = false
+        
+        // init imagePickerRectPts, make sure the rect is pdfWidth:pdfHeight
+        println("width = \(self.view.frame.width), height = \(self.view.frame.height)")
+        let rectHeight = self.view.frame.width   // ? why self.frame.width < self.frame.height
+        let rectWidth = rectHeight * CGFloat(pdfHeight / pdfWidth)
+        
+        imagePickerRectPts[0].x = (self.view.frame.height - rectWidth) / 2
+        imagePickerRectPts[0].y = 0
+        imagePickerRectPts[1].x = (self.view.frame.height - rectWidth) / 2 + rectWidth
+        imagePickerRectPts[1].y = 0
+        imagePickerRectPts[2].x = imagePickerRectPts[0].x
+        imagePickerRectPts[2].y = self.view.frame.width
+        imagePickerRectPts[3].x = imagePickerRectPts[1].x
+        imagePickerRectPts[3].y = self.view.frame.width
+        drawImagePickerSection()
+        
+        //sets the selected image to image view
+    }
+    
+    func imagePickerControllerDidCancel(picker: UIImagePickerController)
+    {
+        println("picker cancel.")
+    }
     
     // timer
     func updateMegneto(timer: NSTimer) -> Void {
@@ -375,28 +491,59 @@ class ViewController: UIViewController, F53OSCClientDelegate, F53OSCPacketDestin
         
         println("double tapped")
         
-        clearTransSelection()
+        // startTranslate == true, translation
+        if (startTranslate) {
+            clearTransSelection()
+            
+            if (self.beginUpdate) {
+                // disable updating
+                self.beginUpdate = false
+                
+                let size = UIScreen.mainScreen().bounds.height/2
+                let startX = UIScreen.mainScreen().bounds.width/2-size/2
+                let startY = UIScreen.mainScreen().bounds.height/2-size/2
+                let labelRect = CGRectMake(startX, startY, size, size)
+                let labelCenter = CGPointMake(UIScreen.mainScreen().bounds.width/2, UIScreen.mainScreen().bounds.height/2)
+                drawCustomizedLabel(labelRect, center: labelCenter, str: "Stop Updating", bkColor: transparentGrayColor, duration: NSTimeInterval(0.5))
+            } else {
+                // continue updating
+                self.beginUpdate = true
+                
+                let size = UIScreen.mainScreen().bounds.height/2
+                let startX = UIScreen.mainScreen().bounds.width/2-size/2
+                let startY = UIScreen.mainScreen().bounds.height/2-size/2
+                let labelRect = CGRectMake(startX, startY, size, size)
+                let labelCenter = CGPointMake(UIScreen.mainScreen().bounds.width/2, UIScreen.mainScreen().bounds.height/2)
+                drawCustomizedLabel(labelRect, center: labelCenter, str: "Start Updating", bkColor: transparentPinkColor, duration: NSTimeInterval(0.5))
+            }
+        }
         
-        if (self.beginUpdate) {
-            // disable updating
-            self.beginUpdate = false
+        // startTranslate == false, crop image
+        else {
+            // calculate the rect based on selected area
+            //println("\(imagePickerView.bounds.width), \(imagePickerView.bounds.height)")
+            let croppedWidth = ((imagePickerRectPts[2].y-imagePickerRectPts[0].y) / imagePickerView.bounds.width) * imagePickerImg.size.width
+            let croppedHeight = ((imagePickerRectPts[1].x-imagePickerRectPts[0].x) / imagePickerView.bounds.height) * imagePickerImg.size.height
+            println("cropped image width = \(croppedWidth), height = \(croppedHeight)")
+            let croppedStartX = ((imagePickerView.bounds.width - imagePickerRectPts[2].y) / imagePickerView.bounds.width) * imagePickerImg.size.width
+            let croppedStartY = (imagePickerRectPts[2].x / imagePickerView.bounds.height) * imagePickerImg.size.height
+            println("cropped image startX = \(croppedStartX), startY = \(croppedStartY)")
             
-            let size = UIScreen.mainScreen().bounds.height/2
-            let startX = UIScreen.mainScreen().bounds.width/2-size/2
-            let startY = UIScreen.mainScreen().bounds.height/2-size/2
-            let labelRect = CGRectMake(startX, startY, size, size)
-            let labelCenter = CGPointMake(UIScreen.mainScreen().bounds.width/2, UIScreen.mainScreen().bounds.height/2)
-            drawCustomizedLabel(labelRect, center: labelCenter, str: "Stop Updating", bkColor: transparentGrayColor, duration: NSTimeInterval(0.5))
-        } else {
-            // continue updating
-            self.beginUpdate = true
             
-            let size = UIScreen.mainScreen().bounds.height/2
-            let startX = UIScreen.mainScreen().bounds.width/2-size/2
-            let startY = UIScreen.mainScreen().bounds.height/2-size/2
-            let labelRect = CGRectMake(startX, startY, size, size)
-            let labelCenter = CGPointMake(UIScreen.mainScreen().bounds.width/2, UIScreen.mainScreen().bounds.height/2)
-            drawCustomizedLabel(labelRect, center: labelCenter, str: "Start Updating", bkColor: transparentPinkColor, duration: NSTimeInterval(0.5))
+            // crop image
+            let img = cropImageRect(imagePickerImg, topLeftX: croppedStartX, topLeftY: croppedStartY, width: croppedWidth, height: croppedHeight)
+            println("before crop width = \(imagePickerImg.size.width), height = \(imagePickerImg.size.height)")
+            println("after crop width = \(img.size.width), height = \(img.size.height)")
+            imageView.image = scaleImage(img, maxDimension: 1650)
+            println("after sccale width = \(imageView.image!.size.width), height = \(imageView.image!.size.height)")
+            
+            // clear imagePickerView and imagePickerRectSelectView
+            if (self.imagePickerView != nil && self.imagePickerView.isDescendantOfView(self.view)) {
+                self.imagePickerView.removeFromSuperview()
+            }
+            if (self.imagePickerRectSelectView != nil && self.imagePickerRectSelectView.isDescendantOfView(self.view)) {
+                self.imagePickerRectSelectView.removeFromSuperview()
+            }
         }
     }
     
@@ -409,85 +556,219 @@ class ViewController: UIViewController, F53OSCClientDelegate, F53OSCPacketDestin
     ////////////////////////////
     // word selection
     func scrollViewPanned(recognizer: UIPanGestureRecognizer) {
-        let x = recognizer.locationInView(imageView).x
-        let y = recognizer.locationInView(imageView).y
-        
-        let width = abs(x-transRectStartX)
-        let height = abs(y-transRectStartY)
-        
-        var startX = min(x, transRectStartX)
-        var startY = min(y, transRectStartY)
-        if (recognizer.state == UIGestureRecognizerState.Began) {
+        // startTranslate == true, select rect for translation
+        if (startTranslate) {
+            let x = recognizer.locationInView(imageView).x
+            let y = recognizer.locationInView(imageView).y
             
-            println("STATE BEGIN: (\(x), \(y))")
-            // stop offset updating
-            self.beginUpdate = false
-            println("set beginUpdate to false")
+            let width = abs(x-transRectStartX)
+            let height = abs(y-transRectStartY)
             
-            //self.oscServer.stopListening()
-            // storage start position
-            transRectStartX = x;
-            transRectStartY = y;
-            // clear translate label if there exists one
-            if (self.transRectSelectLabel != nil && self.transRectSelectLabel.isDescendantOfView(self.view)) {
-                self.transRectSelectLabel.removeFromSuperview()
-            }
-            
-        } else if (recognizer.state == UIGestureRecognizerState.Changed) {
-            
-            // draw rectangle from start position
-            let transRectEndX = x;
-            let transRectEndY = y;
-            println("startX = \(startX), startY = \(startY)")
-            drawPanSelectionRect(startX-self.scrollView.contentOffset.x, startY: startY-self.scrollView.contentOffset.y, width: width, height: height)
-            
-        } else if (recognizer.state == UIGestureRecognizerState.Ended) {
-            
-            println("STATE END: (\(x), \(y))")
-            let transRectEndX = x;
-            let transRectEndY = y;
-            drawPanSelectionRect(startX-self.scrollView.contentOffset.x, startY: startY-self.scrollView.contentOffset.y, width: width, height: height)
-            
-            /////////////////////////////////////
-            // OCR + translation
-            if (width > 40 && height > 20) {
-                // crop image for translation
-                let img = cropImageRect(imageView.image!, topLeftX: startX, topLeftY: startY, width: width, height: height)
+            var startX = min(x, transRectStartX)
+            var startY = min(y, transRectStartY)
+            if (recognizer.state == UIGestureRecognizerState.Began) {
                 
-                // draw translate label
-                // notice crop and display rect is not from the same postion, since there is an offset for scrollview, so update startX and startY here
-                startX = startX - self.scrollView.contentOffset.x
-                startY = startY - self.scrollView.contentOffset.y
-                let labelRect = CGRectMake(startX, startY, width, height)
+                println("STATE BEGIN: (\(x), \(y))")
+                // stop offset updating
+                self.beginUpdate = false
+                println("set beginUpdate to false")
                 
-                // compare to transScreenTopLeftX and transScreenTopLeftY to decide the position of rect
-                let screenHeight = UIScreen.mainScreen().bounds.height
-                if (height < screenHeight/3) {
-                    if (startY + height/2 < transScreenTopLeftY + screenHeight/2) {
-                        let labelCenter = CGPointMake(startX+width/2, startY+height+height/2+5)
-                        drawTranslateLabel(labelRect, center: labelCenter, str: "Translating ...")
-                        self.performOCR(img, disLabel: self.transRectSelectLabel)
-                    } else if (startY + height/2 >= transScreenTopLeftY + screenHeight/2) {
-                        let labelCenter = CGPointMake(startX+width/2, startY-height/2-5)
-                        drawTranslateLabel(labelRect, center: labelCenter, str: "Translating ...")
-                        self.performOCR(img, disLabel: self.transRectSelectLabel)
+                //self.oscServer.stopListening()
+                // storage start position
+                transRectStartX = x;
+                transRectStartY = y;
+                // clear translate label if there exists one
+                if (self.transRectSelectLabel != nil && self.transRectSelectLabel.isDescendantOfView(self.view)) {
+                    self.transRectSelectLabel.removeFromSuperview()
+                }
+                
+            } else if (recognizer.state == UIGestureRecognizerState.Changed) {
+                
+                // draw rectangle from start position
+                let transRectEndX = x;
+                let transRectEndY = y;
+                println("startX = \(startX), startY = \(startY)")
+                drawPanSelectionRect(startX-self.scrollView.contentOffset.x, startY: startY-self.scrollView.contentOffset.y, width: width, height: height)
+                
+            } else if (recognizer.state == UIGestureRecognizerState.Ended) {
+                
+                println("STATE END: (\(x), \(y))")
+                let transRectEndX = x;
+                let transRectEndY = y;
+                drawPanSelectionRect(startX-self.scrollView.contentOffset.x, startY: startY-self.scrollView.contentOffset.y, width: width, height: height)
+                
+                /////////////////////////////////////
+                // OCR + translation
+                if (width > 40 && height > 20) {
+                    // crop image for translation
+                    let img = cropImageRect(imageView.image!, topLeftX: startX, topLeftY: startY, width: width, height: height)
+                    
+                    // draw translate label
+                    // notice crop and display rect is not from the same postion, since there is an offset for scrollview, so update startX and startY here
+                    startX = startX - self.scrollView.contentOffset.x
+                    startY = startY - self.scrollView.contentOffset.y
+                    let labelRect = CGRectMake(startX, startY, width, height)
+                    
+                    // compare to transScreenTopLeftX and transScreenTopLeftY to decide the position of rect
+                    let screenHeight = UIScreen.mainScreen().bounds.height
+                    if (height < screenHeight/3) {
+                        if (startY + height/2 < transScreenTopLeftY + screenHeight/2) {
+                            let labelCenter = CGPointMake(startX+width/2, startY+height+height/2+5)
+                            drawTranslateLabel(labelRect, center: labelCenter, str: "Translating ...")
+                            self.performOCR(img, disLabel: self.transRectSelectLabel)
+                        } else if (startY + height/2 >= transScreenTopLeftY + screenHeight/2) {
+                            let labelCenter = CGPointMake(startX+width/2, startY-height/2-5)
+                            drawTranslateLabel(labelRect, center: labelCenter, str: "Translating ...")
+                            self.performOCR(img, disLabel: self.transRectSelectLabel)
+                        }
+                    } else {
+                        // selection area is too big, use botton section
+                        self.translateTxt.textAlignment = .Center
+                        self.translateTxt.text = "Text Recognition ..."
+                        self.performOCR(img, disLabel: self.translateTxt)
+                        fadeInLabel(self.translateTxt)
                     }
                 } else {
-                    // selection area is too big, use botton section
-                    self.translateTxt.textAlignment = .Center
-                    self.translateTxt.text = "Text Recognition ..."
-                    self.performOCR(img, disLabel: self.translateTxt)
-                    fadeInLabel(self.translateTxt)
+                    // rect area is too small, cancel rect
+                    clearTransSelection()
                 }
-            } else {
-                // rect area is too small, cancel rect
-                clearTransSelection()
+                /////////////////////////////////////
+                
+                // restore position updating
+                //self.beginUpdate = true
+                
             }
-            /////////////////////////////////////
             
-            // restore position updating
-            //self.beginUpdate = true
+        }
+        // startTranslate == false, select rect for image crop
+        else {
+            let x = recognizer.locationInView(self.view).x
+            let y = recognizer.locationInView(self.view).y
+            var deltaX:CGFloat = 0
+            var deltaY:CGFloat = 0
             
+            if (recognizer.state == UIGestureRecognizerState.Began) {
+                
+                println("STATE BEGIN: (\(x), \(y))")
+                
+                self.imagePickerRectIdx = detectRecognizerIndex(x, y: y)
+                println("imagePickerRectIdx = \(imagePickerRectIdx)")
+                
+            } else if (recognizer.state == UIGestureRecognizerState.Changed || recognizer.state == UIGestureRecognizerState.Ended) {
+                
+                //println("STATE CHANGED: (\(x), \(y))")
+                
+                // update imagePickerRectPts
+                if (imagePickerRectIdx >= 0 && imagePickerRectIdx < 4) {
+                    // with range, select certain edge point
+                    deltaX = abs(x - imagePickerRectPts[imagePickerRectIdx].x)
+                    deltaY = abs(y - imagePickerRectPts[imagePickerRectIdx].y)
+                    imagePickerRectPts[imagePickerRectIdx].x = x
+                    imagePickerRectPts[imagePickerRectIdx].y = y
+                }
+                
+                // sync four points and keep the size of rect to be pdfHeight : pdfWidth
+                if (imagePickerRectIdx == 0) {
+                    // make sure the y of 0 and 1 are the same
+                    imagePickerRectPts[1].y = imagePickerRectPts[0].y
+                    // make sure the x of 0 and 2 are the same
+                    imagePickerRectPts[2].x = imagePickerRectPts[0].x
+                    
+                    // keep the size, normalize width and height first
+                    //if (deltaX < deltaY) {
+                        // keep the height
+                        let newHeight = imagePickerRectPts[2].y - imagePickerRectPts[0].y
+                        let newWidth = newHeight * CGFloat(pdfHeight / pdfWidth)
+                        imagePickerRectPts[0].x = imagePickerRectPts[1].x - newWidth
+                        imagePickerRectPts[2].x = imagePickerRectPts[0].x
+                    /*} else {
+                        // keep the width
+                        let newWidth = imagePickerRectPts[1].x - imagePickerRectPts[0].x
+                        let newHeight = newWidth * CGFloat(pdfWidth / pdfHeight)
+                        imagePickerRectPts[0].y = imagePickerRectPts[2].y - newHeight
+                        imagePickerRectPts[1].y = imagePickerRectPts[0].y
+                    }*/
+                } else if (imagePickerRectIdx == 1) {
+                    // make sure the y of 0 and 1 are the same
+                    imagePickerRectPts[0].y = imagePickerRectPts[1].y
+                    // make sure the x of 1 and 3 are the same
+                    imagePickerRectPts[3].x = imagePickerRectPts[1].x
+                    
+                    // keep the size, normalize width and height first
+                    //if (deltaX < deltaY) {
+                        // keep the height
+                        let newHeight = imagePickerRectPts[3].y - imagePickerRectPts[1].y
+                        let newWidth = newHeight * CGFloat(pdfHeight / pdfWidth)
+                        imagePickerRectPts[1].x = imagePickerRectPts[0].x + newWidth
+                        imagePickerRectPts[3].x = imagePickerRectPts[1].x
+                    /*} else {
+                        // keep the width
+                        let newWidth = imagePickerRectPts[1].x - imagePickerRectPts[0].x
+                        let newHeight = newWidth * CGFloat(pdfWidth / pdfHeight)
+                        imagePickerRectPts[1].y = imagePickerRectPts[3].y - newHeight
+                        imagePickerRectPts[0].y = imagePickerRectPts[1].y
+                    }*/
+                } else if (imagePickerRectIdx == 2) {
+                    // make sure the y of 2 and 3 are the same
+                    imagePickerRectPts[3].y = imagePickerRectPts[2].y
+                    // make sure the x of 0 and 2 are the same
+                    imagePickerRectPts[0].x = imagePickerRectPts[2].x
+                    
+                    // keep the size, normalize width and height first
+                    //if (deltaX < deltaY) {
+                        // keep the height
+                        let newHeight = imagePickerRectPts[2].y - imagePickerRectPts[0].y
+                        let newWidth = newHeight * CGFloat(pdfHeight / pdfWidth)
+                        imagePickerRectPts[2].x = imagePickerRectPts[3].x - newWidth
+                        imagePickerRectPts[0].x = imagePickerRectPts[2].x
+                    /*} else {
+                        // keep the width
+                        let newWidth = imagePickerRectPts[3].x - imagePickerRectPts[2].x
+                        let newHeight = newWidth * CGFloat(pdfWidth / pdfHeight)
+                        imagePickerRectPts[2].y = imagePickerRectPts[0].y + newHeight
+                        imagePickerRectPts[3].y = imagePickerRectPts[2].y
+                    }*/
+                } else if (imagePickerRectIdx == 3) {
+                    // make sure the y of 2 and 3 are the same
+                    imagePickerRectPts[2].y = imagePickerRectPts[3].y
+                    // make sure the x of 1 and 3 are the same
+                    imagePickerRectPts[1].x = imagePickerRectPts[3].x
+                    
+                    // keep the size, normalize width and height first
+                    //if (deltaX < deltaY) {
+                        // keep the height
+                        let newHeight = imagePickerRectPts[3].y - imagePickerRectPts[1].y
+                        let newWidth = newHeight * CGFloat(pdfHeight / pdfWidth)
+                        imagePickerRectPts[3].x = imagePickerRectPts[2].x + newWidth
+                        imagePickerRectPts[1].x = imagePickerRectPts[3].x
+                    /*} else {
+                        // keep the width
+                        let newWidth = imagePickerRectPts[3].x - imagePickerRectPts[2].x
+                        let newHeight = newWidth * CGFloat(pdfWidth / pdfHeight)
+                        imagePickerRectPts[3].y = imagePickerRectPts[1].y + newHeight
+                        imagePickerRectPts[2].y = imagePickerRectPts[3].y
+                    }*/
+                }
+                
+                // draw rectangle from start position
+                drawImagePickerSection()
+                
+            }
+        }
+        
+    }
+    
+    func detectRecognizerIndex(x: CGFloat, y: CGFloat) -> Int {
+        if (Int(abs(x-imagePickerRectPts[0].x)) < imagePickerRectIdxDetecThres && Int(abs(y-imagePickerRectPts[0].y)) < imagePickerRectIdxDetecThres) {
+            return 0
+        } else if (Int(abs(x-imagePickerRectPts[1].x)) < imagePickerRectIdxDetecThres && Int(abs(y-imagePickerRectPts[1].y)) < imagePickerRectIdxDetecThres) {
+            return 1
+        } else if (Int(abs(x-imagePickerRectPts[2].x)) < imagePickerRectIdxDetecThres && Int(abs(y-imagePickerRectPts[2].y)) < imagePickerRectIdxDetecThres) {
+            return 2
+        } else if (Int(abs(x-imagePickerRectPts[3].x)) < imagePickerRectIdxDetecThres && Int(abs(y-imagePickerRectPts[3].y)) < imagePickerRectIdxDetecThres) {
+            return 3
+        } else {
+            return -1
         }
     }
     
@@ -558,6 +839,20 @@ class ViewController: UIViewController, F53OSCClientDelegate, F53OSCPacketDestin
             })
         }
         
+    }
+    
+    /////////////////////////////
+    // rect for image picker resize
+    func drawImagePickerSection() {
+        if (self.imagePickerRectSelectView != nil && self.imagePickerRectSelectView.isDescendantOfView(self.view)) {
+            self.imagePickerRectSelectView.removeFromSuperview()
+        }
+        // draw a rectangle
+        let rectSize = CGSize(width: imagePickerRectPts[1].x-imagePickerRectPts[0].x, height: imagePickerRectPts[2].y-imagePickerRectPts[0].y)
+        imagePickerRectSelectView = UIImageView(frame: CGRect(origin: imagePickerRectPts[0], size: rectSize))
+        imagePickerRectSelectView.image = drawCustomImage(rectSize, color: UIColor.whiteColor())
+        imagePickerRectSelectView.alpha = 0.7
+        self.view.addSubview(imagePickerRectSelectView)
     }
     
     func clearTransSelection() {
@@ -748,5 +1043,74 @@ class ViewController: UIViewController, F53OSCClientDelegate, F53OSCPacketDestin
         let img = cropImageFromPoint(imageView.image!, topLeftX: CGFloat(self.smoothAvgCol), topLeftY: CGFloat(self.smoothAvgRow))
         self.performOCR(img, disLabel: self.translateTxt)
         fadeInLabel(self.translateTxt)
+    }
+    
+    @IBAction func chooseContentBtn(sender: AnyObject) {
+        // pop up taking photo alertaction
+        self.takePhotoOrUseLib()
+    }
+    
+    
+    
+    //////////////////////////////////////////////////
+    // Overlay View
+    // NOTICE: UIScreen.mainScreen().bounds is based on application, since we set the landscape view,
+    // so UIScreen.mainScreen().width > UIScreen.mainScreen().height. While in imagePicker, the view is 
+    // vertical (the default view), so we need to set UIScreen.mainScreen().bounds.height as width and 
+    // UIScreen.mainScreen().bounds.width as the height
+    func createOverlayView() -> UIView! {
+        var overLayView = UIView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.height, UIScreen.mainScreen().bounds.width))
+        overLayView.backgroundColor = UIColor.clearColor()
+        
+        // Load the image to show in the overlay:
+        let offsetWidth:CGFloat = 20
+        println("UIScreen.width = \(UIScreen.mainScreen().bounds.width), UIScreen.height = \(UIScreen.mainScreen().bounds.height)")
+        let overLayGraphicView = UIImageView(image: UIImage(named: "overlaygraphic.png")!)
+        let overLayGraphicWidth = UIScreen.mainScreen().bounds.height - offsetWidth
+        let overLayGraphicHeight = overLayGraphicWidth * CGFloat(pdfHeight / pdfWidth)
+        
+        let startX = offsetWidth/2
+        //let startY = (UIScreen.mainScreen().bounds.width - overLayGraphicHeight)/2
+        let startY:CGFloat = 70
+        
+        overLayGraphicView.frame = CGRectMake(startX, startY, overLayGraphicWidth, overLayGraphicHeight)
+        overLayView.addSubview(overLayGraphicView)
+        
+        // add a button
+        let btnImage = UIImage(named: "overlaygraphicBtn.png")
+        let btnImageHeight:CGFloat = 40
+        let btnImageWidth:CGFloat = (btnImage!.size.width/btnImage!.size.height) * btnImageHeight
+        let btnImageStartX:CGFloat = (UIScreen.mainScreen().bounds.height - btnImageWidth)/2
+        let btnImageStartY:CGFloat = UIScreen.mainScreen().bounds.width - btnImageHeight - 20
+        println("debug: CGRectMake(\(btnImageStartX), \(btnImageStartY), \(btnImageWidth), \(btnImageHeight))")
+        let takePicBtn = UIButton(frame: CGRectMake(btnImageStartX, btnImageStartY, btnImageWidth, btnImageHeight))
+        //let takePicBtn = UIButton(frame: CGRectMake(131, 508, 120, 80))
+        takePicBtn.setImage(btnImage, forState: .Normal)
+        takePicBtn.addTarget(self, action: "takePictureWithinRange:", forControlEvents: .TouchUpInside)
+        overLayView.addSubview(takePicBtn)
+        println("debug: \(takePicBtn.frame.width), \(takePicBtn.frame.height)")
+        
+        // add a text label
+        var label = UILabel(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.height, 20))
+        label.center = CGPointMake(UIScreen.mainScreen().bounds.height/2, CAMERAOFFSETY/2)
+        label.textAlignment = NSTextAlignment.Center
+        label.font = label.font.fontWithSize(14)
+        label.textColor = UIColor.whiteColor()
+        label.text = "Align the page into rectangle"
+        overLayView.addSubview(label)
+        
+        /*let takePicBtn = UIButton(frame: CGRectMake(100, 50, 100, 50))
+        takePicBtn.backgroundColor = UIColor.redColor()
+        takePicBtn.titleLabel?.text = "Take Pic"
+        takePicBtn.addTarget(self, action: "takePictureWithinRange:", forControlEvents: .TouchUpInside)
+        overLayView.addSubview(takePicBtn)*/
+        
+        return overLayView
+    }
+    
+    func takePictureWithinRange(sender: UIButton!) {
+        self.imagePicker.takePicture()
+        //sets the selected image to image view
+
     }
 }

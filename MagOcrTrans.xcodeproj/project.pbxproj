@@ -54,6 +54,8 @@
 		6C562A221ADD9382008AF3F7 /* Polyglot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C562A1F1ADD9382008AF3F7 /* Polyglot.swift */; };
 		6C562A231ADD9382008AF3F7 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C562A201ADD9382008AF3F7 /* Session.swift */; };
 		6C562A241ADD9382008AF3F7 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C562A211ADD9382008AF3F7 /* StringExtension.swift */; };
+		6CB06EEB1AEACF57009ADB29 /* overlaygraphic.png in Resources */ = {isa = PBXBuildFile; fileRef = 6CB06EEA1AEACF57009ADB29 /* overlaygraphic.png */; };
+		6CB06EED1AEAE41B009ADB29 /* overlaygraphicBtn.png in Resources */ = {isa = PBXBuildFile; fileRef = 6CB06EEC1AEAE41A009ADB29 /* overlaygraphicBtn.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -136,6 +138,8 @@
 		6C562A1F1ADD9382008AF3F7 /* Polyglot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Polyglot.swift; sourceTree = "<group>"; };
 		6C562A201ADD9382008AF3F7 /* Session.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
 		6C562A211ADD9382008AF3F7 /* StringExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
+		6CB06EEA1AEACF57009ADB29 /* overlaygraphic.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = overlaygraphic.png; sourceTree = "<group>"; };
+		6CB06EEC1AEAE41A009ADB29 /* overlaygraphicBtn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = overlaygraphicBtn.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -213,6 +217,8 @@
 		6C0BDC221AA7F50300590F51 /* MagPadOcrTrans */ = {
 			isa = PBXGroup;
 			children = (
+				6CB06EEC1AEAE41A009ADB29 /* overlaygraphicBtn.png */,
+				6CB06EEA1AEACF57009ADB29 /* overlaygraphic.png */,
 				6C562A151ADD8EA5008AF3F7 /* file.jpg */,
 				6C562A1F1ADD9382008AF3F7 /* Polyglot.swift */,
 				6C562A201ADD9382008AF3F7 /* Session.swift */,
@@ -390,7 +396,9 @@
 			files = (
 				6C0BDC731AA7F5BE00590F51 /* LICENSE.txt in Resources */,
 				6C0BDC2B1AA7F50300590F51 /* Main.storyboard in Resources */,
+				6CB06EEB1AEACF57009ADB29 /* overlaygraphic.png in Resources */,
 				6C0BDC301AA7F50300590F51 /* LaunchScreen.xib in Resources */,
+				6CB06EED1AEAE41B009ADB29 /* overlaygraphicBtn.png in Resources */,
 				6C0BDC2D1AA7F50300590F51 /* Images.xcassets in Resources */,
 				6C562A161ADD8EA6008AF3F7 /* file.jpg in Resources */,
 				6C562A1A1ADD8FB4008AF3F7 /* tessdata in Resources */,
