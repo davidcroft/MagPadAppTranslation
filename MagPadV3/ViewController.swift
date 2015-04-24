@@ -213,6 +213,11 @@ class ViewController: UIViewController, F53OSCClientDelegate, F53OSCPacketDestin
     
     // OSC
     func takeMessage(message: F53OSCMessage) -> Void {
+        // make sure to stop updating if user is trying to select an area for translation
+        if (!self.beginUpdate) {
+            return
+        }
+        
         // create a new thread to get URL from parse and set webview
         //println("receive OSC message")
         dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), { () -> Void in
@@ -230,16 +235,13 @@ class ViewController: UIViewController, F53OSCClientDelegate, F53OSCPacketDestin
             })
             //println("new location: \(locRow), \(locCol)")
             
-            // make sure to stop updating if user is trying to select an area for translation
-            if (self.beginUpdate) {
-                // setScrollViewOffset
-                let deltaRow = (self.smoothAvgRow - self.smoothAvgRowPrev) * (self.smoothAvgRow - self.smoothAvgRowPrev)
-                let deltaCol = (self.smoothAvgCol - self.smoothAvgColPrev) * (self.smoothAvgCol - self.smoothAvgColPrev)
-                if (sqrt(deltaRow + deltaCol) > 0.1) {
-                    self.setScrollViewOffset(self.smoothAvgRow, colVal: self.smoothAvgCol)
-                    println("move to offset: \(self.smoothAvgRow), \(self.smoothAvgCol)")
-                    //self.setScrollViewOffset(locRow, colVal: locCol)
-                }
+            // setScrollViewOffset
+            let deltaRow = (self.smoothAvgRow - self.smoothAvgRowPrev) * (self.smoothAvgRow - self.smoothAvgRowPrev)
+            let deltaCol = (self.smoothAvgCol - self.smoothAvgColPrev) * (self.smoothAvgCol - self.smoothAvgColPrev)
+            if (sqrt(deltaRow + deltaCol) > 0.1) {
+                self.setScrollViewOffset(self.smoothAvgRow, colVal: self.smoothAvgCol)
+                println("move to offset: \(self.smoothAvgRow), \(self.smoothAvgCol)")
+                //self.setScrollViewOffset(locRow, colVal: locCol)
             }
         })
     }
@@ -333,7 +335,15 @@ class ViewController: UIViewController, F53OSCClientDelegate, F53OSCPacketDestin
         let xVal:Double = (colVal / pdfWidth) * width
         let yVal:Double = (rowVal / pdfHeight) * height
         if (xVal > 0 && xVal < width && yVal > 0 && yVal < height) {
-            scrollView.setContentOffset(CGPoint(x: xVal, y: yVal), animated: true)
+            
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                UIView.animateWithDuration(1.2, delay: 0, options: UIViewAnimationOptions.AllowUserInteraction, animations: { () -> Void in
+                    self.scrollView.contentOffset = CGPointMake(CGFloat(xVal), CGFloat(yVal))
+                    }, completion: nil)
+                /*UIView.animateWithDuration(1.2, animations: { () -> Void in
+                self.scrollView.contentOffset = CGPointMake(CGFloat(xVal), CGFloat(yVal))
+                })*/
+            })
         }
         
         // storage offset
