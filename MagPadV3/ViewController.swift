@@ -68,6 +68,7 @@ class ViewController: UIViewController, F53OSCClientDelegate, F53OSCPacketDestin
     var imagePickerView: UIImageView!
     // index: 0 topLeft, 1 topRight, 2 bottomLeft, 3 bottomRight
     var imagePickerRectPts = [CGPoint](count: 4, repeatedValue: CGPointMake(0, 0))
+    var imagePickerCropRect:CGRect!
     var imagePickerRectIdx = -1
     let imagePickerRectIdxDetecThres:Int = 30   // threshold for detect index
     
@@ -241,34 +242,60 @@ class ViewController: UIViewController, F53OSCClientDelegate, F53OSCPacketDestin
         picker.dismissViewControllerAnimated(true, completion: nil)
         
         imagePickerImg = info[UIImagePickerControllerOriginalImage] as! UIImage
+        //println("before crop image width = \(imagePickerImg.size.width), height = \(imagePickerImg.size.height)")
         
-        imagePickerView = UIImageView(image: imagePickerImg)
-        imagePickerView.transform = CGAffineTransformMakeRotation((270.0 * CGFloat(M_PI)) / 180.0)
-        imagePickerView.frame = CGRectMake(0, 0, self.view.frame.width*(imagePickerImg.size.height/imagePickerImg.size.width), self.view.frame.width)
-        self.view.addSubview(imagePickerView)
+        // rotate image 90 degree clockwise to align to current orientation
+        /*if (imagePickerImg.imageOrientation.rawValue == 3) {
+            imagePickerImg = imagePickerImg.imageRotatedByDegrees(90, flip: false)
+            println("before crop image width = \(imagePickerImg.size.width), height = \(imagePickerImg.size.height)")
+            println("\(imagePickerImg.imageOrientation.rawValue)")
+        }*/
         
-        // set startTranslate to false
-        startTranslate = false
         
-        // stop position update
-        self.beginUpdate = false
+        // crop image
+        let viewWidth:CGFloat = min(UIScreen.mainScreen().bounds.height, UIScreen.mainScreen().bounds.width)
+        let viewHeight:CGFloat = viewWidth*4/3  // image ratio is 4:3
+        let croppedWidth = (imagePickerCropRect.width / viewWidth) * min(imagePickerImg.size.width, imagePickerImg.size.height)
+        let croppedHeight = croppedWidth * CGFloat(pdfHeight / pdfWidth)
+        println("cropped image width = \(croppedWidth), height = \(croppedHeight)")
         
-        // init imagePickerRectPts, make sure the rect is pdfWidth:pdfHeight
-        println("width = \(self.view.frame.width), height = \(self.view.frame.height)")
-        let rectHeight = self.view.frame.width   // ? why self.frame.width < self.frame.height
-        let rectWidth = rectHeight * CGFloat(pdfHeight / pdfWidth)
+        let croppedStartX = (imagePickerCropRect.origin.x / viewWidth) * min(imagePickerImg.size.width, imagePickerImg.size.height)
+        let croppedStartY = ((imagePickerCropRect.origin.y-CAMERAOFFSETY) / viewHeight) * max(imagePickerImg.size.width, imagePickerImg.size.height)
+        println("cropped image startX = \(croppedStartX), startY = \(croppedStartY)")
         
-        imagePickerRectPts[0].x = (self.view.frame.height - rectWidth) / 2
-        imagePickerRectPts[0].y = 0
-        imagePickerRectPts[1].x = (self.view.frame.height - rectWidth) / 2 + rectWidth
-        imagePickerRectPts[1].y = 0
-        imagePickerRectPts[2].x = imagePickerRectPts[0].x
-        imagePickerRectPts[2].y = self.view.frame.width
-        imagePickerRectPts[3].x = imagePickerRectPts[1].x
-        imagePickerRectPts[3].y = self.view.frame.width
-        drawImagePickerSection()
+        // Image Transform if orientation is not the same
+        var rectTransform:CGAffineTransform
+        switch (imagePickerImg.imageOrientation) {
+            case UIImageOrientation.Left:
+                rectTransform = CGAffineTransformTranslate(CGAffineTransformMakeRotation(CGFloat(M_PI_2)), 0, -imagePickerImg.size.height)
+                break
+            case UIImageOrientation.Right:
+                rectTransform = CGAffineTransformTranslate(CGAffineTransformMakeRotation(CGFloat(-M_PI_2)), -imagePickerImg.size.width, 0)
+                break
+            case UIImageOrientation.Down:
+                rectTransform = CGAffineTransformTranslate(CGAffineTransformMakeRotation(CGFloat(-M_PI)), -imagePickerImg.size.width, -imagePickerImg.size.height)
+                break
+            default:
+                rectTransform = CGAffineTransformIdentity
+        }
+        rectTransform = CGAffineTransformScale(rectTransform, imagePickerImg.scale, imagePickerImg.scale);
         
-        //sets the selected image to image view
+        let cropRect = CGRectMake(croppedStartX, croppedStartY, croppedWidth, croppedHeight)
+        let imageRef:CGImageRef = CGImageCreateWithImageInRect(imagePickerImg.CGImage, CGRectApplyAffineTransform(cropRect, rectTransform))
+        var croppedImg = UIImage(CGImage: imageRef, scale: imagePickerImg.scale, orientation: imagePickerImg.imageOrientation) as UIImage!
+        
+        // set scrollview
+        croppedImg = self.scaleImage(croppedImg!, maxDimension: 1650)
+        imageView.image = croppedImg
+        /*imagePickerView = UIImageView(image: croppedImg)
+        imagePickerView.frame = CGRectMake(0, 0, croppedImg.size.width, croppedImg.size.height)
+        println("after crop imgage: width = \(croppedImg.size.width), height = \(croppedImg.size.height)")
+        self.view.addSubview(imagePickerView)*/
+        
+        
+        // restore update and translation
+        startTranslate = true
+        self.beginUpdate = true
     }
     
     func imagePickerControllerDidCancel(picker: UIImagePickerController)
@@ -1073,7 +1100,8 @@ class ViewController: UIViewController, F53OSCClientDelegate, F53OSCPacketDestin
         //let startY = (UIScreen.mainScreen().bounds.width - overLayGraphicHeight)/2
         let startY:CGFloat = 70
         
-        overLayGraphicView.frame = CGRectMake(startX, startY, overLayGraphicWidth, overLayGraphicHeight)
+        imagePickerCropRect = CGRectMake(startX, startY, overLayGraphicWidth, overLayGraphicHeight)
+        overLayGraphicView.frame = imagePickerCropRect
         overLayView.addSubview(overLayGraphicView)
         
         // add a button
@@ -1082,7 +1110,7 @@ class ViewController: UIViewController, F53OSCClientDelegate, F53OSCPacketDestin
         let btnImageWidth:CGFloat = (btnImage!.size.width/btnImage!.size.height) * btnImageHeight
         let btnImageStartX:CGFloat = (UIScreen.mainScreen().bounds.height - btnImageWidth)/2
         let btnImageStartY:CGFloat = UIScreen.mainScreen().bounds.width - btnImageHeight - 20
-        println("debug: CGRectMake(\(btnImageStartX), \(btnImageStartY), \(btnImageWidth), \(btnImageHeight))")
+        //println("debug: CGRectMake(\(btnImageStartX), \(btnImageStartY), \(btnImageWidth), \(btnImageHeight))")
         let takePicBtn = UIButton(frame: CGRectMake(btnImageStartX, btnImageStartY, btnImageWidth, btnImageHeight))
         //let takePicBtn = UIButton(frame: CGRectMake(131, 508, 120, 80))
         takePicBtn.setImage(btnImage, forState: .Normal)
@@ -1109,8 +1137,59 @@ class ViewController: UIViewController, F53OSCClientDelegate, F53OSCPacketDestin
     }
     
     func takePictureWithinRange(sender: UIButton!) {
+        // set startTranslate to false
+        startTranslate = false
+        
+        // stop position update
+        self.beginUpdate = false
+        
+        // image take delegate
         self.imagePicker.takePicture()
-        //sets the selected image to image view
 
+    }
+}
+
+
+extension UIImage {
+    public func imageRotatedByDegrees(degrees: CGFloat, flip: Bool) -> UIImage {
+        let radiansToDegrees: (CGFloat) -> CGFloat = {
+            return $0 * (180.0 / CGFloat(M_PI))
+        }
+        let degreesToRadians: (CGFloat) -> CGFloat = {
+            return $0 / 180.0 * CGFloat(M_PI)
+        }
+        
+        // calculate the size of the rotated view's containing box for our drawing space
+        let rotatedViewBox = UIView(frame: CGRect(origin: CGPointZero, size: size))
+        let t = CGAffineTransformMakeRotation(degreesToRadians(degrees));
+        rotatedViewBox.transform = t
+        let rotatedSize = rotatedViewBox.frame.size
+        
+        // Create the bitmap context
+        UIGraphicsBeginImageContext(rotatedSize)
+        let bitmap = UIGraphicsGetCurrentContext()
+        
+        // Move the origin to the middle of the image so we will rotate and scale around the center.
+        CGContextTranslateCTM(bitmap, rotatedSize.width / 2.0, rotatedSize.height / 2.0);
+        
+        //   // Rotate the image context
+        CGContextRotateCTM(bitmap, degreesToRadians(degrees));
+        
+        // Now, draw the rotated/scaled image into the context
+        var yFlip: CGFloat
+        
+        if(flip){
+            yFlip = CGFloat(-1.0)
+        } else {
+            yFlip = CGFloat(1.0)
+        }
+        
+        CGContextScaleCTM(bitmap, yFlip, -1.0)
+        CGContextDrawImage(bitmap, CGRectMake(-size.width / 2, -size.height / 2, size.width, size.height), CGImage)
+        
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return newImage
     }
 }
