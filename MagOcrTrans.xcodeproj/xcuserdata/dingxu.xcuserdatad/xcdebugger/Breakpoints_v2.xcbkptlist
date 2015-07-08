@@ -90,11 +90,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MagPadV3/ViewController.swift"
-            timestampString = "451627193.091303"
+            timestampString = "451893143.248665"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "893"
-            endingLineNumber = "893"
+            startingLineNumber = "895"
+            endingLineNumber = "895"
             landmarkName = "clearTransSelection()"
             landmarkType = "5">
          </BreakpointContent>
@@ -138,11 +138,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MagPadV3/ViewController.swift"
-            timestampString = "451627193.091303"
+            timestampString = "451893143.248665"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1024"
-            endingLineNumber = "1024"
+            startingLineNumber = "1026"
+            endingLineNumber = "1026"
             landmarkName = "fadeOutLabel(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -154,11 +154,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MagPadV3/ViewController.swift"
-            timestampString = "451627193.091303"
+            timestampString = "451893143.248665"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "916"
-            endingLineNumber = "916"
+            startingLineNumber = "918"
+            endingLineNumber = "918"
             landmarkName = "cropImageFromPoint(_:topLeftX:topLeftY:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -170,11 +170,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MagPadV3/ViewController.swift"
-            timestampString = "451627193.091303"
+            timestampString = "451893143.248665"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "917"
-            endingLineNumber = "917"
+            startingLineNumber = "919"
+            endingLineNumber = "919"
             landmarkName = "cropImageFromPoint(_:topLeftX:topLeftY:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -186,11 +186,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MagPadV3/ViewController.swift"
-            timestampString = "451627193.091303"
+            timestampString = "451893143.248665"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "922"
-            endingLineNumber = "922"
+            startingLineNumber = "924"
+            endingLineNumber = "924"
             landmarkName = "cropImageRect(_:topLeftX:topLeftY:width:height:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -218,11 +218,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MagPadV3/ViewController.swift"
-            timestampString = "451627193.091303"
+            timestampString = "451893143.248665"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "953"
-            endingLineNumber = "953"
+            startingLineNumber = "955"
+            endingLineNumber = "955"
             landmarkName = "ViewController"
             landmarkType = "3">
          </BreakpointContent>
@@ -234,11 +234,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MagPadV3/ViewController.swift"
-            timestampString = "451627193.091303"
+            timestampString = "451893143.248665"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1068"
-            endingLineNumber = "1068"
+            startingLineNumber = "1070"
+            endingLineNumber = "1070"
             landmarkName = "translateBtn(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -250,11 +250,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MagPadV3/ViewController.swift"
-            timestampString = "451627193.091303"
+            timestampString = "451893143.248665"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1006"
-            endingLineNumber = "1006"
+            startingLineNumber = "1008"
+            endingLineNumber = "1008"
             landmarkName = "fadeInLabel(_:)"
             landmarkType = "5">
             <Locations>
@@ -298,11 +298,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MagPadV3/ViewController.swift"
-            timestampString = "451627193.091303"
+            timestampString = "451893143.248665"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "810"
-            endingLineNumber = "810"
+            startingLineNumber = "812"
+            endingLineNumber = "812"
             landmarkName = "drawPanSelectionRect(_:startY:width:height:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -314,11 +314,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MagPadV3/ViewController.swift"
-            timestampString = "451627193.091303"
+            timestampString = "451893143.248665"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "832"
-            endingLineNumber = "832"
+            startingLineNumber = "834"
+            endingLineNumber = "834"
             landmarkName = "drawTranslateLabel(_:center:str:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -330,11 +330,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MagPadV3/ViewController.swift"
-            timestampString = "451627193.091303"
+            timestampString = "451893143.248665"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "831"
-            endingLineNumber = "831"
+            startingLineNumber = "833"
+            endingLineNumber = "833"
             landmarkName = "drawTranslateLabel(_:center:str:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -346,11 +346,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MagPadV3/ViewController.swift"
-            timestampString = "451627193.091303"
+            timestampString = "451893143.248665"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "814"
-            endingLineNumber = "814"
+            startingLineNumber = "816"
+            endingLineNumber = "816"
             landmarkName = "drawPanSelectionRect(_:startY:width:height:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -362,11 +362,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MagPadV3/ViewController.swift"
-            timestampString = "451627193.091303"
+            timestampString = "451893143.248665"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "578"
-            endingLineNumber = "578"
+            startingLineNumber = "580"
+            endingLineNumber = "580"
             landmarkName = "dismissReminderViewTimer(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -378,23 +378,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MagPadV3/ViewController.swift"
-            timestampString = "451627193.091303"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "858"
-            endingLineNumber = "858"
-            landmarkName = "drawCustomizedLabel(_:center:str:bkColor:duration:)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "MagPadV3/ViewController.swift"
-            timestampString = "451627193.091303"
+            timestampString = "451893143.248665"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "860"
@@ -406,15 +390,31 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "MagPadV3/ViewController.swift"
+            timestampString = "451893143.248665"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "862"
+            endingLineNumber = "862"
+            landmarkName = "drawCustomizedLabel(_:center:str:bkColor:duration:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MagPadV3/ViewController.swift"
-            timestampString = "451627193.091303"
+            timestampString = "451893143.248665"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "844"
-            endingLineNumber = "844"
+            startingLineNumber = "846"
+            endingLineNumber = "846"
             landmarkName = "drawCustomizedLabel(_:center:str:bkColor:duration:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -426,11 +426,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MagPadV3/ViewController.swift"
-            timestampString = "451627193.091303"
+            timestampString = "451893143.248665"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "839"
-            endingLineNumber = "839"
+            startingLineNumber = "841"
+            endingLineNumber = "841"
             landmarkName = "drawCustomizedLabel(_:center:str:bkColor:duration:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -442,11 +442,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MagPadV3/ViewController.swift"
-            timestampString = "451627193.091303"
+            timestampString = "451893143.248665"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "840"
-            endingLineNumber = "840"
+            startingLineNumber = "842"
+            endingLineNumber = "842"
             landmarkName = "drawCustomizedLabel(_:center:str:bkColor:duration:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -458,11 +458,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MagPadV3/ViewController.swift"
-            timestampString = "451627193.091303"
+            timestampString = "451893143.248665"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "845"
-            endingLineNumber = "845"
+            startingLineNumber = "847"
+            endingLineNumber = "847"
             landmarkName = "drawCustomizedLabel(_:center:str:bkColor:duration:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -474,11 +474,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MagPadV3/ViewController.swift"
-            timestampString = "451627193.091303"
+            timestampString = "451893143.248665"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "861"
-            endingLineNumber = "861"
+            startingLineNumber = "863"
+            endingLineNumber = "863"
             landmarkName = "drawCustomizedLabel(_:center:str:bkColor:duration:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -522,11 +522,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MagPadV3/ViewController.swift"
-            timestampString = "451627193.091303"
+            timestampString = "451893143.248665"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "880"
-            endingLineNumber = "880"
+            startingLineNumber = "882"
+            endingLineNumber = "882"
             landmarkName = "drawImagePickerSection()"
             landmarkType = "5">
          </BreakpointContent>
@@ -538,11 +538,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MagPadV3/ViewController.swift"
-            timestampString = "451627193.091303"
+            timestampString = "451893143.248665"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "710"
-            endingLineNumber = "710"
+            startingLineNumber = "712"
+            endingLineNumber = "712"
             landmarkName = "scrollViewPanned(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -554,11 +554,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MagPadV3/ViewController.swift"
-            timestampString = "451627193.091303"
+            timestampString = "451893143.248665"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1147"
-            endingLineNumber = "1147"
+            startingLineNumber = "1149"
+            endingLineNumber = "1149"
             landmarkName = "takePictureWithinRange(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -586,11 +586,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MagPadV3/ViewController.swift"
-            timestampString = "451627193.091303"
+            timestampString = "451893143.248665"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1147"
-            endingLineNumber = "1147"
+            startingLineNumber = "1149"
+            endingLineNumber = "1149"
             landmarkName = "takePictureWithinRange(_:)"
             landmarkType = "5">
          </BreakpointContent>

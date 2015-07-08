@@ -448,6 +448,8 @@ class ViewController: UIViewController, F53OSCClientDelegate, F53OSCPacketDestin
         // add scrollView
         //imageView = UIImageView(image: UIImage(named: "file.jpg"))
         imageView = UIImageView(image: scaleImage(UIImage(named: "file.jpg")!, maxDimension: 1650))
+        imageView.image = nil
+        imageView.backgroundColor = UIColor.whiteColor()
         scrollView = UIScrollView(frame: view.bounds)
         scrollView.backgroundColor = UIColor.blackColor()
         //scrollView.contentSize = imageView.bounds.size
